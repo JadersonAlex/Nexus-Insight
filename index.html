@@ -782,16 +782,94 @@ footer a{ color:var(--text-2); }
 }
 
 /* ============================================================
+   DATA TABLE (Setores) — spreadsheet-style, same design language
+   ============================================================ */
+.data-table{
+  border-radius:16px; overflow:hidden; border:1px solid var(--glass-border-soft);
+}
+.data-table-head{
+  display:grid; grid-template-columns:1fr auto; gap:16px; padding:15px 22px;
+  background:linear-gradient(120deg, rgba(76,201,240,.20), rgba(139,124,246,.14));
+  border-bottom:1px solid var(--glass-border);
+}
+.data-table-head .dt-col-name, .data-table-head .dt-col-val{
+  font-size:10.5px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--text-0);
+}
+.data-table-head .dt-col-val{ text-align:right; min-width:110px; }
+.data-table-body{ display:flex; flex-direction:column; }
+.data-table-row{
+  display:grid; grid-template-columns:1fr auto; gap:16px; padding:13px 22px;
+  border-bottom:1px solid rgba(255,255,255,.045);
+  font-size:13.5px;
+  opacity:0; animation:barIn .5s ease forwards;
+}
+.data-table-row:nth-child(even){ background:rgba(255,255,255,.02); }
+.data-table-row:hover{ background:rgba(76,201,240,.05); }
+.data-table-row .dt-col-name{ color:var(--text-1); font-weight:500; }
+.data-table-row .dt-col-val{
+  color:var(--text-0); font-weight:700; text-align:right; min-width:110px; font-family:var(--font-display);
+}
+.data-table-total{
+  display:grid; grid-template-columns:1fr auto; gap:16px; padding:16px 22px;
+  background:rgba(76,201,240,.07); border-top:2px solid rgba(76,201,240,.32);
+}
+.data-table-total .dt-col-name{ font-weight:700; color:var(--text-0); letter-spacing:.04em; font-size:13px; }
+.data-table-total .dt-col-val{
+  font-weight:800; color:var(--cyan-soft); text-align:right; min-width:110px;
+  font-family:var(--font-display); font-size:17px;
+}
+
+/* ============================================================
+   INFORMATIVO — weekly audit schedule
+   ============================================================ */
+.schedule-grid{
+  display:grid; grid-template-columns:repeat(4, 1fr); gap:16px; margin-top:8px;
+}
+.schedule-card{
+  padding:26px 22px; border-radius:var(--radius-lg);
+  background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+  border:1px solid var(--glass-border-soft);
+  opacity:0; transform:translateY(14px); animation:rise .7s cubic-bezier(.2,.8,.2,1) forwards;
+  transition:transform .25s, border-color .25s;
+}
+.schedule-card:hover{ transform:translateY(-3px); border-color:var(--glass-border); }
+.schedule-day{
+  font-size:10.5px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--text-2);
+  margin-bottom:16px;
+}
+.schedule-type{
+  display:flex; align-items:center; gap:11px;
+  font-family:var(--font-display); font-weight:700; font-size:19px; color:var(--text-0);
+  margin-bottom:18px;
+}
+.schedule-icon{
+  width:38px; height:38px; border-radius:11px; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center; font-size:16px;
+  background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1);
+}
+.type-etiqueta .schedule-icon{ background:rgba(76,201,240,.14); border-color:rgba(76,201,240,.3); }
+.type-presenca .schedule-icon{ background:rgba(139,124,246,.14); border-color:rgba(139,124,246,.3); }
+.type-ruptura .schedule-icon{ background:rgba(251,191,36,.14); border-color:rgba(251,191,36,.3); }
+.schedule-time{
+  display:inline-flex; align-items:center; gap:7px; font-size:12px; font-weight:700; color:var(--text-1);
+  padding:7px 14px; border-radius:999px; background:var(--glass); border:1px solid var(--glass-border-soft);
+}
+
+/* ============================================================
    RESPONSIVE
    ============================================================ */
 @media (max-width:1080px){
   .grid, .grid-row2{ grid-template-columns:1fr; }
   .kpi-row{ grid-template-columns:repeat(3,1fr); }
   .credits-grid{ grid-template-columns:1fr; }
+  .schedule-grid{ grid-template-columns:repeat(2,1fr); }
 }
 @media (max-width:640px){
   .val-row{ grid-template-columns:1fr; gap:8px; }
   .val-row-stock{ text-align:left; }
+  .schedule-grid{ grid-template-columns:1fr; }
+  .data-table-head .dt-col-name, .data-table-head .dt-col-val{ font-size:9.5px; }
+  .data-table-row, .data-table-head, .data-table-total{ padding-left:16px; padding-right:16px; }
 }
 @media (max-width:900px){
   .app{ margin-left:0; }
@@ -864,6 +942,13 @@ footer a{ color:var(--text-2); }
         <svg width="12" height="12" viewBox="0 0 18 18" fill="none"><path d="M9 12.5V3M9 3L5 7M9 3l4 4M3 14.5h12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </button>
     </div>
+  </nav>
+
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Escala</div>
+    <button class="nav-item" id="navInformativo">
+      <span class="nav-icon">🗓️</span><span>Informativo</span>
+    </button>
   </nav>
 
   <nav class="sidebar-nav">
@@ -1083,6 +1168,34 @@ footer a{ color:var(--text-2); }
     </div>
   </section>
 
+  <section class="grid-row2" id="setoresTableWrap" style="grid-template-columns:1fr; display:none;">
+    <div class="panel p4" id="setoresTablePanel">
+      <div class="panel-head">
+        <div>
+          <div class="panel-title">Produtos restantes por setor</div>
+          <div class="panel-sub">Itens com estoque ainda não concluídos</div>
+        </div>
+        <div class="panel-head-actions">
+          <div class="panel-tag" id="setoresTableTag">177 no total</div>
+          <button class="copy-img-btn" data-copy-target="#setoresTablePanel" title="Copiar imagem deste indicador" aria-label="Copiar imagem deste indicador">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="9" cy="9" r="1.8"/><path d="M21 15l-5-5-9 9"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="data-table" id="setoresTable">
+        <div class="data-table-head">
+          <div class="dt-col-name">Setor</div>
+          <div class="dt-col-val">Quantidade</div>
+        </div>
+        <div class="data-table-body" id="setoresTableBody"></div>
+        <div class="data-table-total">
+          <div class="dt-col-name">TOTAL</div>
+          <div class="dt-col-val" id="setoresTableTotalVal">0</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <footer>
     <span>Painel gerado a partir dos dados reais das planilhas de auditoria — nenhum valor foi digitado manualmente.</span>
     <span id="footerDate">Etiqueta · última leitura 14/09/2026 · Presença · última leitura 15/09/2026</span>
@@ -1151,6 +1264,43 @@ footer a{ color:var(--text-2); }
     <footer>
       <span>Lista de validade gerada a partir da planilha importada — nenhum valor foi digitado manualmente.</span>
       <span id="valFooterDate">Atualizado em —</span>
+    </footer>
+
+  </div>
+
+  <div id="viewInformativo" hidden>
+
+    <section class="val-hero">
+      <div class="eyebrow" style="justify-content:flex-start; margin-bottom:10px;">Cronograma Semanal</div>
+      <div class="val-title">Dias de Auditoria</div>
+      <div class="panel-sub">Programação fixa das auditorias da loja, por dia da semana</div>
+    </section>
+
+    <section class="schedule-grid">
+      <div class="schedule-card type-etiqueta" style="animation-delay:.1s">
+        <div class="schedule-day">Segunda-feira</div>
+        <div class="schedule-type"><span class="schedule-icon">🏷️</span>Etiqueta</div>
+        <div class="schedule-time">08:00 às 20:00</div>
+      </div>
+      <div class="schedule-card type-presenca" style="animation-delay:.18s">
+        <div class="schedule-day">Terça-feira</div>
+        <div class="schedule-type"><span class="schedule-icon">👁️</span>Presença</div>
+        <div class="schedule-time">08:00 às 18:00</div>
+      </div>
+      <div class="schedule-card type-ruptura" style="animation-delay:.26s">
+        <div class="schedule-day">Quarta-feira</div>
+        <div class="schedule-type"><span class="schedule-icon">📉</span>Ruptura</div>
+        <div class="schedule-time">08:00 às 18:00</div>
+      </div>
+      <div class="schedule-card type-etiqueta" style="animation-delay:.34s">
+        <div class="schedule-day">Quinta-feira</div>
+        <div class="schedule-type"><span class="schedule-icon">🏷️</span>Etiqueta</div>
+        <div class="schedule-time">08:00 às 20:00</div>
+      </div>
+    </section>
+
+    <footer>
+      <span>Cronograma informativo — horários sujeitos a ajustes pela gerência da loja.</span>
     </footer>
 
   </div>
@@ -1542,8 +1692,22 @@ const SUBTAB_META = {
 };
 let subTab = 'estatistica';
 
+function renderSetoresTable(d){
+  const body = document.getElementById('setoresTableBody');
+  const rows = d.setores || [];
+  body.innerHTML = rows.map((s,i)=>`
+    <div class="data-table-row" style="animation-delay:${Math.min(i,20)*35}ms">
+      <div class="dt-col-name">${s.nome}</div>
+      <div class="dt-col-val">${fmtInt(s.restantes)}</div>
+    </div>`).join('');
+  const total = rows.reduce((a,s)=>a+s.restantes,0);
+  document.getElementById('setoresTableTotalVal').textContent = fmtInt(total);
+  document.getElementById('setoresTableTag').textContent = fmtInt(total) + ' no total';
+}
+
 function renderSubPanel(d){
   if(subTab === 'destaque' || subTab === 'estatistica') return; // handled elsewhere
+  if(subTab === 'setores'){ renderSetoresTable(d); return; }
   const meta = SUBTAB_META[subTab];
   document.getElementById('subPanelTitle').textContent = meta.title;
   document.getElementById('subPanelSub').textContent = meta.sub;
@@ -1552,9 +1716,11 @@ function renderSubPanel(d){
 }
 
 function showSubTabContent(){
+  const isBarList = subTab === 'colaboradores' || subTab === 'corredores';
   document.getElementById('statPane').style.display = subTab === 'estatistica' ? '' : 'none';
   document.getElementById('heroPane').style.display = subTab === 'destaque' ? '' : 'none';
-  document.getElementById('subPanelWrap').style.display = (subTab !== 'destaque' && subTab !== 'estatistica') ? '' : 'none';
+  document.getElementById('subPanelWrap').style.display = isBarList ? '' : 'none';
+  document.getElementById('setoresTableWrap').style.display = subTab === 'setores' ? '' : 'none';
 }
 
 function initSubTabs(){
@@ -1590,13 +1756,15 @@ function switchView(view){
   currentView = view;
   document.getElementById('viewDashboard').hidden = view !== 'dashboard';
   document.getElementById('viewValidade').hidden = view !== 'validade';
+  document.getElementById('viewInformativo').hidden = view !== 'informativo';
   document.getElementById('viewCredits').hidden = view !== 'credits';
 
   document.getElementById('navCredits').classList.toggle('active', view==='credits');
   document.getElementById('navDashboard').classList.toggle('active', view==='dashboard');
   document.getElementById('navValidade').classList.toggle('active', view==='validade');
+  document.getElementById('navInformativo').classList.toggle('active', view==='informativo');
 
-  const rootLabel = view==='credits' ? 'Créditos' : (view==='validade' ? 'Validade' : 'Dashboard');
+  const rootLabel = view==='credits' ? 'Créditos' : (view==='validade' ? 'Validade' : (view==='informativo' ? 'Informativo' : 'Dashboard'));
   document.getElementById('breadcrumbRoot').textContent = rootLabel;
   const showAuditPart = view === 'dashboard';
   document.getElementById('crumbSep').style.display = showAuditPart ? '' : 'none';
@@ -1627,6 +1795,9 @@ function initSidebarNav(){
   });
   document.getElementById('navValidade').addEventListener('click', ()=>{
     switchView('validade');
+  });
+  document.getElementById('navInformativo').addEventListener('click', ()=>{
+    switchView('informativo');
   });
   document.getElementById('navCredits').addEventListener('click', ()=>{
     switchView('credits');
@@ -1960,11 +2131,56 @@ function buildHeroSvg(panelEl){
   return { w, h, svg: out };
 }
 
+function buildDataTableSvg(panelEl){
+  const cr = panelEl.getBoundingClientRect();
+  const w = cr.width, h = cr.height;
+  let out = panelChrome(cr,w,h) + panelHeader(panelEl, cr);
+
+  const table = panelEl.querySelector('.data-table');
+  const tr = relRect(table, cr);
+  const defs = `<defs><linearGradient id="expTblHead" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0%" stop-color="rgba(76,201,240,.28)"/><stop offset="100%" stop-color="rgba(139,124,246,.18)"/>
+  </linearGradient></defs>`;
+  out += defs;
+  out += roundedRect(tr.x, tr.y, tr.w, tr.h, 16, 'none', {stroke:'rgba(255,255,255,.09)', strokeWidth:1});
+
+  const head = table.querySelector('.data-table-head');
+  const hr = relRect(head, cr);
+  out += `<path d="M${hr.x},${hr.y+hr.h} V${hr.y+16} Q${hr.x},${hr.y} ${hr.x+16},${hr.y} H${hr.x+hr.w-16} Q${hr.x+hr.w},${hr.y} ${hr.x+hr.w},${hr.y+16} V${hr.y+hr.h} Z" fill="url(#expTblHead)"/>`;
+  head.querySelectorAll('.dt-col-name, .dt-col-val').forEach(c=>{
+    const r = relRect(c, cr);
+    const isVal = c.classList.contains('dt-col-val');
+    out += svgText(isVal ? r.x+r.w : r.x, r.y+r.h*0.75, c.textContent.trim().toUpperCase(), measureFont(c), {anchor: isVal?'end':'start', color:'#f5f8fc', spacing:1});
+  });
+
+  table.querySelectorAll('.data-table-row').forEach((row,i)=>{
+    const rr = relRect(row, cr);
+    if(i%2===1) out += `<rect x="${rr.x}" y="${rr.y}" width="${rr.w}" height="${rr.h}" fill="rgba(255,255,255,.025)"/>`;
+    out += `<line x1="${rr.x}" x2="${rr.x+rr.w}" y1="${rr.y+rr.h}" y2="${rr.y+rr.h}" stroke="rgba(255,255,255,.05)" stroke-width="1"/>`;
+    const nameEl = row.querySelector('.dt-col-name'), valEl = row.querySelector('.dt-col-val');
+    const nr = relRect(nameEl, cr), vr = relRect(valEl, cr);
+    out += svgText(nr.x, nr.y+nr.h*0.75, nameEl.textContent.trim(), measureFont(nameEl));
+    out += svgText(vr.x+vr.w, vr.y+vr.h*0.78, valEl.textContent.trim(), measureFont(valEl), {anchor:'end'});
+  });
+
+  const total = table.querySelector('.data-table-total');
+  const tt = relRect(total, cr);
+  out += `<rect x="${tt.x}" y="${tt.y}" width="${tt.w}" height="${tt.h}" fill="rgba(76,201,240,.09)"/>`;
+  out += `<line x1="${tt.x}" x2="${tt.x+tt.w}" y1="${tt.y}" y2="${tt.y}" stroke="rgba(76,201,240,.4)" stroke-width="2"/>`;
+  const tn = total.querySelector('.dt-col-name'), tv = total.querySelector('.dt-col-val');
+  const tnr = relRect(tn, cr), tvr = relRect(tv, cr);
+  out += svgText(tnr.x, tnr.y+tnr.h*0.75, tn.textContent.trim(), measureFont(tn));
+  out += svgText(tvr.x+tvr.w, tvr.y+tvr.h*0.8, tv.textContent.trim(), measureFont(tv), {anchor:'end', color:'#8fe3ff'});
+
+  return { w, h, svg: out };
+}
+
 const COPY_BUILDERS = {
   '#panelDesempenho': buildDesempenhoSvg,
   '#panelFluxo': buildFluxoSvg,
   '#subPanelWrap .panel': buildBarListSvg,
   '#heroPane': buildHeroSvg,
+  '#setoresTablePanel': buildDataTableSvg,
 };
 
 async function copyElementImage(targetSel, btn){
