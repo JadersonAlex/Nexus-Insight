@@ -892,6 +892,7 @@ footer a{ color:var(--text-2); }
   background:linear-gradient(120deg, rgba(76,201,240,.10), rgba(139,124,246,.07));
 }
 .rup-box[hidden]{ display:none; }
+.stat-toolbar{ display:flex; justify-content:flex-end; margin-top:18px; }
 .rup-input{ min-width:0; width:200px; padding-right:15px; cursor:text; background-image:none;
   font-family:var(--font-display); font-size:18px; font-weight:700; }
 .rup-result{ display:flex; align-items:center; gap:18px; }
@@ -1110,6 +1111,12 @@ footer a{ color:var(--text-2); }
 
   <div id="statPane">
 
+  <div class="stat-toolbar">
+    <button class="copy-img-btn" data-copy-target="#statPane" title="Copiar imagem das estatísticas" aria-label="Copiar imagem das estatísticas">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="9" cy="9" r="1.8"/><path d="M21 15l-5-5-9 9"/></svg>
+    </button>
+  </div>
+
   <div class="rup-box" id="rupBox" hidden>
     <div class="nl-field">
       <label class="nl-label" for="rupSkuInput">SKU do dia</label>
@@ -1143,9 +1150,6 @@ footer a{ color:var(--text-2); }
         </div>
         <div class="panel-head-actions">
           <div class="panel-tag" id="peakTag">pico 10:00</div>
-          <button class="copy-img-btn" data-copy-target="#panelFluxo" title="Copiar imagem deste indicador" aria-label="Copiar imagem deste indicador">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="9" cy="9" r="1.8"/><path d="M21 15l-5-5-9 9"/></svg>
-          </button>
         </div>
       </div>
       <div class="flow-wrap">
@@ -1160,11 +1164,6 @@ footer a{ color:var(--text-2); }
         <div>
           <div class="panel-title">Desempenho</div>
           <div class="panel-sub">Precisão e conclusão da auditoria</div>
-        </div>
-        <div class="panel-head-actions">
-          <button class="copy-img-btn" data-copy-target="#panelDesempenho" title="Copiar imagem deste indicador" aria-label="Copiar imagem deste indicador">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="9" cy="9" r="1.8"/><path d="M21 15l-5-5-9 9"/></svg>
-          </button>
         </div>
       </div>
       <div class="gauges">
@@ -1557,7 +1556,7 @@ function renderHero(d, key){
   let insightHtml = '';
   if(second){
     const diffPct = Math.round(((top.itens-second.itens)/second.itens)*100);
-    insightHtml = `<span class="spark">&#9670;</span><b>${top.nome.split(' ')[0]}</b> lidera com folga: <b>${fmtInt(top.itens)}</b> itens auditados — ${diffPct}% à frente de ${second.nome}, a segunda colocada.`;
+    insightHtml = `<span class="spark">&#9670;</span><b>${top.nome.split(' ')[0]}</b> lidera com folga: <b>${fmtInt(top.itens)}</b> itens auditados — ${diffPct}% à frente de ${second.nome}, o(a) segundo(a) colocado(a).`;
   }
   document.getElementById('insight').innerHTML = insightHtml;
 }
@@ -2307,9 +2306,50 @@ function buildNaoLidosSvg(panelEl){
   return { w: base.w, h: base.h, svg: base.svg + extra };
 }
 
+function buildStatsSvg(paneEl){
+  const cr = paneEl.getBoundingClientRect();
+  let out = '', maxY = 0;
+  const addBlock = (el, b)=>{ const r = relRect(el, cr); out += `<g transform="translate(${r.x},${r.y})">${b.svg}</g>`; maxY = Math.max(maxY, r.y + b.h); };
+  const card = (el, fill, stroke, radius)=>{ const r = relRect(el, cr); out += roundedRect(r.x, r.y, r.w, r.h, radius, fill, {stroke, strokeWidth:1}); maxY = Math.max(maxY, r.y + r.h); };
+
+  const rup = paneEl.querySelector('#rupBox');
+  if(rup && !rup.hidden){
+    card(rup, 'rgba(76,201,240,.10)', 'rgba(76,201,240,.3)', 20);
+    const lab = rup.querySelector('.nl-label'), inp = rup.querySelector('#rupSkuInput');
+    const lr = relRect(lab, cr), ir = relRect(inp, cr);
+    out += svgText(lr.x, lr.y+lr.h*0.8, lab.textContent.trim().toUpperCase(), measureFont(lab), {color:'#6b7a92', spacing:1});
+    out += roundedRect(ir.x, ir.y, ir.w, ir.h, 12, 'rgba(255,255,255,.06)', {stroke:'rgba(255,255,255,.14)', strokeWidth:1});
+    out += svgText(ir.x+15, ir.y+ir.h*0.66, inp.value || '—', measureFont(inp), {color:'#f5f8fc'});
+    ['#rupPct','.stale-label','#rupFormula'].forEach(sel=>{
+      const el = rup.querySelector(sel), r = relRect(el, cr);
+      out += svgText(r.x, r.y+r.h*0.8, el.textContent.trim(), measureFont(el));
+    });
+  }
+
+  paneEl.querySelectorAll('#kpiRow .kpi').forEach(k=>{
+    card(k, CARD_BG, CARD_BORDER, 20);
+    const lab = k.querySelector('.kpi-label'), val = k.querySelector('.kpi-value');
+    const lr = relRect(lab, cr), vr = relRect(val, cr);
+    out += svgText(lr.x, lr.y+lr.h*0.8, lab.textContent.trim().toUpperCase(), measureFont(lab), {color:'#6b7a92', spacing:1});
+    out += svgText(vr.x, vr.y+vr.h*0.8, val.textContent.trim(), measureFont(val));
+  });
+
+  const stale = paneEl.querySelector('#staleBanner');
+  if(stale && !stale.hidden){
+    card(stale, 'rgba(251,191,36,.09)', 'rgba(251,191,36,.3)', 20);
+    const v = stale.querySelector('.stale-value'), l = stale.querySelector('.stale-label');
+    const vr = relRect(v, cr), lr = relRect(l, cr);
+    out += svgText(vr.x, vr.y+vr.h*0.85, v.textContent.trim(), measureFont(v));
+    out += svgText(lr.x, lr.y+lr.h*0.8, l.textContent.trim(), measureFont(l));
+  }
+
+  addBlock(paneEl.querySelector('#panelFluxo'), buildFluxoSvg(paneEl.querySelector('#panelFluxo')));
+  addBlock(paneEl.querySelector('#panelDesempenho'), buildDesempenhoSvg(paneEl.querySelector('#panelDesempenho')));
+  return { w: cr.width, h: maxY + 4, svg: out };
+}
+
 const COPY_BUILDERS = {
-  '#panelDesempenho': buildDesempenhoSvg,
-  '#panelFluxo': buildFluxoSvg,
+  '#statPane': buildStatsSvg,
   '#subPanelWrap .panel': buildBarListSvg,
   '#heroPane': buildHeroSvg,
   '#setoresTablePanel': buildDataTableSvg,
