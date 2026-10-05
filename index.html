@@ -787,8 +787,26 @@ footer a{ color:var(--text-2); }
 .data-table{
   border-radius:16px; overflow:hidden; border:1px solid var(--glass-border-soft);
 }
+.setores-layout{ display:grid; grid-template-columns:minmax(0,1fr) 270px; gap:18px; align-items:start; }
+.setores-side{ display:flex; flex-direction:column; gap:14px; }
+.side-card{
+  padding:20px 18px; border-radius:16px; text-align:center;
+  background:linear-gradient(120deg, rgba(76,201,240,.20), rgba(139,124,246,.14));
+  border:1px solid var(--glass-border);
+}
+.side-card-label{ font-size:10.5px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--text-1); margin-bottom:8px; }
+.side-card-value{ font-family:var(--font-display); font-weight:800; font-size:30px; color:var(--text-0); line-height:1.1; }
+.side-card.small{ padding:14px 18px; }
+.side-card.small .side-card-value{ font-size:15px; font-weight:700; }
+.dt-col-pct{ display:flex; flex-direction:column; align-items:flex-end; gap:5px; }
+.dt-mini{ display:block; width:100%; height:4px; border-radius:99px; background:rgba(255,255,255,.07); overflow:hidden; }
+.dt-mini b{ display:block; height:100%; border-radius:99px; background:linear-gradient(90deg,#4cc9f0,#8b7cf6); }
+.dt-mini.good b{ background:linear-gradient(90deg,#34d399,#8fe3ff); }
+.dt-mini.warn b{ background:linear-gradient(90deg,#fbbf24,#f59e0b); }
+.dt-empty{ color:var(--text-2) !important; font-weight:500 !important; }
+@media (max-width:900px){ .setores-layout{ grid-template-columns:1fr; } .setores-side{ flex-direction:row; flex-wrap:wrap; } .setores-side .side-card{ flex:1 1 140px; } }
 .data-table-head{
-  display:grid; grid-template-columns:1fr auto; gap:16px; padding:15px 22px;
+  display:grid; grid-template-columns:minmax(0,1fr) repeat(3, minmax(96px,auto)); gap:16px; padding:15px 22px;
   background:linear-gradient(120deg, rgba(76,201,240,.20), rgba(139,124,246,.14));
   border-bottom:1px solid var(--glass-border);
 }
@@ -798,7 +816,7 @@ footer a{ color:var(--text-2); }
 .data-table-head .dt-col-val{ text-align:right; min-width:110px; }
 .data-table-body{ display:flex; flex-direction:column; }
 .data-table-row{
-  display:grid; grid-template-columns:1fr auto; gap:16px; padding:13px 22px;
+  display:grid; grid-template-columns:minmax(0,1fr) repeat(3, minmax(96px,auto)); gap:16px; padding:13px 22px; align-items:center;
   border-bottom:1px solid rgba(255,255,255,.045);
   font-size:13.5px;
   opacity:0; animation:barIn .5s ease forwards;
@@ -810,7 +828,7 @@ footer a{ color:var(--text-2); }
   color:var(--text-0); font-weight:700; text-align:right; min-width:110px; font-family:var(--font-display);
 }
 .data-table-total{
-  display:grid; grid-template-columns:1fr auto; gap:16px; padding:16px 22px;
+  display:grid; grid-template-columns:minmax(0,1fr) repeat(3, minmax(96px,auto)); gap:16px; padding:16px 22px; align-items:center;
   background:rgba(76,201,240,.07); border-top:2px solid rgba(76,201,240,.32);
 }
 .data-table-total .dt-col-name{ font-weight:700; color:var(--text-0); letter-spacing:.04em; font-size:13px; }
@@ -1248,15 +1266,26 @@ footer a{ color:var(--text-2); }
           </button>
         </div>
       </div>
-      <div class="data-table" id="setoresTable">
-        <div class="data-table-head">
-          <div class="dt-col-name">Setor</div>
-          <div class="dt-col-val">Quantidade</div>
+      <div class="setores-layout">
+        <div class="data-table" id="setoresTable">
+          <div class="data-table-head">
+            <div class="dt-col-name">Setor</div>
+            <div class="dt-col-val">Restantes</div>
+            <div class="dt-col-val">SKU</div>
+            <div class="dt-col-val">Parcial</div>
+          </div>
+          <div class="data-table-body" id="setoresTableBody"></div>
+          <div class="data-table-total">
+            <div class="dt-col-name">TOTAL</div>
+            <div class="dt-col-val" id="setoresTableTotalVal">0</div>
+            <div class="dt-col-val" id="setoresTableTotalSku">0</div>
+            <div class="dt-col-val" id="setoresTableTotalPct">0%</div>
+          </div>
         </div>
-        <div class="data-table-body" id="setoresTableBody"></div>
-        <div class="data-table-total">
-          <div class="dt-col-name">TOTAL</div>
-          <div class="dt-col-val" id="setoresTableTotalVal">0</div>
+        <div class="setores-side" id="setoresSide">
+          <div class="side-card"><div class="side-card-label">Parcial da auditoria</div><div class="side-card-value" id="setoresSidePct">0%</div></div>
+          <div class="side-card"><div class="side-card-label">SKU</div><div class="side-card-value" id="setoresSideSku">0</div></div>
+          <div class="side-card small"><div class="side-card-label">Última atualização</div><div class="side-card-value" id="setoresSideDate">—</div></div>
         </div>
       </div>
     </div>
@@ -1796,17 +1825,35 @@ const SUBTAB_META = {
 };
 let subTab = 'estatistica';
 
+function parcialClass(p){ return p>=0.95 ? 'good' : (p<0.8 ? 'warn' : ''); }
 function renderSetoresTable(d){
   const body = document.getElementById('setoresTableBody');
   const rows = d.setores || [];
-  body.innerHTML = rows.map((s,i)=>`
+  const temSku = rows.length > 0 && rows.every(s=> typeof s.sku === 'number');
+  body.innerHTML = rows.map((s,i)=>{
+    const skuCell = temSku ? fmtInt(s.sku) : '—';
+    const pctCell = (temSku && s.sku>0)
+      ? `<div class="dt-col-val dt-col-pct"><span>${fmtPct(s.parcial)}</span><i class="dt-mini ${parcialClass(s.parcial)}"><b style="width:${Math.round(s.parcial*100)}%"></b></i></div>`
+      : `<div class="dt-col-val dt-empty">—</div>`;
+    return `
     <div class="data-table-row" style="animation-delay:${Math.min(i,20)*35}ms">
       <div class="dt-col-name">${s.nome}</div>
       <div class="dt-col-val">${fmtInt(s.restantes)}</div>
-    </div>`).join('');
+      <div class="dt-col-val ${temSku?'':'dt-empty'}">${skuCell}</div>
+      ${pctCell}
+    </div>`;
+  }).join('');
   const total = rows.reduce((a,s)=>a+s.restantes,0);
+  const skuTotal = temSku ? rows.reduce((a,s)=>a+s.sku,0) : (d.comEstoque||0);
+  const audTotal = temSku ? rows.reduce((a,s)=>a+s.auditados,0) : null;
+  const pctTotal = temSku ? (skuTotal ? audTotal/skuTotal : 0) : (d.pctConclusao||0);
   document.getElementById('setoresTableTotalVal').textContent = fmtInt(total);
+  document.getElementById('setoresTableTotalSku').textContent = fmtInt(skuTotal);
+  document.getElementById('setoresTableTotalPct').textContent = fmtPct(pctTotal);
   document.getElementById('setoresTableTag').textContent = fmtInt(total) + ' no total';
+  document.getElementById('setoresSidePct').textContent = fmtPct(d.pctConclusao||0);
+  document.getElementById('setoresSideSku').textContent = fmtInt(d.comEstoque||0);
+  document.getElementById('setoresSideDate').textContent = d.ultimaAtualizacao || '—';
 }
 
 function renderSubPanel(d){
@@ -2249,7 +2296,10 @@ function buildDataTableSvg(panelEl){
   const tr = relRect(table, cr);
   const defs = `<defs><linearGradient id="expTblHead" x1="0" y1="0" x2="1" y2="0">
     <stop offset="0%" stop-color="rgba(76,201,240,.28)"/><stop offset="100%" stop-color="rgba(139,124,246,.18)"/>
-  </linearGradient></defs>`;
+  </linearGradient>
+  <linearGradient id="expMini" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#4cc9f0"/><stop offset="100%" stop-color="#8b7cf6"/></linearGradient>
+  <linearGradient id="expMiniGood" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#34d399"/><stop offset="100%" stop-color="#8fe3ff"/></linearGradient>
+  <linearGradient id="expMiniWarn" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#fbbf24"/><stop offset="100%" stop-color="#f59e0b"/></linearGradient></defs>`;
   out += defs;
   out += roundedRect(tr.x, tr.y, tr.w, tr.h, 16, 'none', {stroke:'rgba(255,255,255,.09)', strokeWidth:1});
 
@@ -2266,20 +2316,46 @@ function buildDataTableSvg(panelEl){
     const rr = relRect(row, cr);
     if(i%2===1) out += `<rect x="${rr.x}" y="${rr.y}" width="${rr.w}" height="${rr.h}" fill="rgba(255,255,255,.025)"/>`;
     out += `<line x1="${rr.x}" x2="${rr.x+rr.w}" y1="${rr.y+rr.h}" y2="${rr.y+rr.h}" stroke="rgba(255,255,255,.05)" stroke-width="1"/>`;
-    const nameEl = row.querySelector('.dt-col-name'), valEl = row.querySelector('.dt-col-val');
-    const nr = relRect(nameEl, cr), vr = relRect(valEl, cr);
+    const nameEl = row.querySelector('.dt-col-name');
+    const nr = relRect(nameEl, cr);
     out += svgText(nr.x, nr.y+nr.h*0.75, nameEl.textContent.trim(), measureFont(nameEl));
-    out += svgText(vr.x+vr.w, vr.y+vr.h*0.78, valEl.textContent.trim(), measureFont(valEl), {anchor:'end'});
+    row.querySelectorAll('.dt-col-val').forEach(valEl=>{
+      const vr = relRect(valEl, cr);
+      const txtEl = valEl.querySelector('span') || valEl;
+      const empty = valEl.classList.contains('dt-empty');
+      const tr2 = relRect(txtEl, cr);
+      out += svgText(vr.x+vr.w, tr2.y+tr2.h*0.78, txtEl.textContent.trim(), measureFont(txtEl), {anchor:'end', color: empty?'#6b7a92':undefined});
+      const mini = valEl.querySelector('.dt-mini');
+      if(mini){
+        const mr = relRect(mini, cr);
+        out += roundedRect(mr.x, mr.y, mr.w, mr.h, mr.h/2, 'rgba(255,255,255,.07)');
+        const fw = mr.w * (parseFloat(mini.firstElementChild.style.width)||0)/100;
+        const g = mini.classList.contains('good') ? 'url(#expMiniGood)' : (mini.classList.contains('warn') ? 'url(#expMiniWarn)' : 'url(#expMini)');
+        if(fw>0) out += roundedRect(mr.x, mr.y, fw, mr.h, mr.h/2, g);
+      }
+    });
   });
 
   const total = table.querySelector('.data-table-total');
   const tt = relRect(total, cr);
   out += `<rect x="${tt.x}" y="${tt.y}" width="${tt.w}" height="${tt.h}" fill="rgba(76,201,240,.09)"/>`;
   out += `<line x1="${tt.x}" x2="${tt.x+tt.w}" y1="${tt.y}" y2="${tt.y}" stroke="rgba(76,201,240,.4)" stroke-width="2"/>`;
-  const tn = total.querySelector('.dt-col-name'), tv = total.querySelector('.dt-col-val');
-  const tnr = relRect(tn, cr), tvr = relRect(tv, cr);
+  const tn = total.querySelector('.dt-col-name');
+  const tnr = relRect(tn, cr);
   out += svgText(tnr.x, tnr.y+tnr.h*0.75, tn.textContent.trim(), measureFont(tn));
-  out += svgText(tvr.x+tvr.w, tvr.y+tvr.h*0.8, tv.textContent.trim(), measureFont(tv), {anchor:'end', color:'#8fe3ff'});
+  total.querySelectorAll('.dt-col-val').forEach(tv=>{
+    const tvr = relRect(tv, cr);
+    out += svgText(tvr.x+tvr.w, tvr.y+tvr.h*0.8, tv.textContent.trim(), measureFont(tv), {anchor:'end', color:'#8fe3ff'});
+  });
+
+  panelEl.querySelectorAll('.side-card').forEach(card=>{
+    const r = relRect(card, cr);
+    out += roundedRect(r.x, r.y, r.w, r.h, 16, 'url(#expTblHead)', {stroke:'rgba(255,255,255,.14)', strokeWidth:1});
+    const lab = card.querySelector('.side-card-label'), val = card.querySelector('.side-card-value');
+    const lr = relRect(lab, cr), vr = relRect(val, cr);
+    out += svgText(lr.x+lr.w/2, lr.y+lr.h*0.8, lab.textContent.trim().toUpperCase(), measureFont(lab), {anchor:'middle', color:'#a9b8cf', spacing:1});
+    out += svgText(vr.x+vr.w/2, vr.y+vr.h*0.8, val.textContent.trim(), measureFont(val), {anchor:'middle'});
+  });
 
   return { w, h, svg: out };
 }
@@ -2920,6 +2996,7 @@ function buildDatasetFromRows(headers, rows, type, fallbackDate){
   let semEstoque=0, restantes=0, acertos=0, erros=0, auditados=0, incompleteRows=0, desatualizadas=0;
   const setorAll = new Set();
   const setorRestante = {};
+  const setorSku = {}, setorAud = {};
   const corredorRestante = {};
   const colabItens = {}, colabSucessos = {};
   const horas = new Array(24).fill(0);
@@ -2938,6 +3015,7 @@ function buildDatasetFromRows(headers, rows, type, fallbackDate){
       return;
     }
     if(bucket==='noStock'){ semEstoque++; return; }
+    setorSku[setorRaw] = (setorSku[setorRaw]||0)+1;
     if(bucket==='remaining'){
       restantes++;
       if(colDias!==-1 && r[colDias]!=='' && r[colDias]!==null && Number(r[colDias])<=NL_MAX_JANELA){
@@ -2960,6 +3038,7 @@ function buildDatasetFromRows(headers, rows, type, fallbackDate){
       return;
     }
     auditados++;
+    setorAud[setorRaw] = (setorAud[setorRaw]||0)+1;
     const name = String(colabRaw).trim();
     colabItens[name] = (colabItens[name]||0)+1;
     if(bucket==='success'){ acertos++; colabSucessos[name] = (colabSucessos[name]||0)+1; }
@@ -2981,7 +3060,8 @@ function buildDatasetFromRows(headers, rows, type, fallbackDate){
     return { matricula, nome, itens, sucessos:suc, erros:itens-suc, taxa: itens? suc/itens : 0 };
   }).sort((a,b)=> b.itens-a.itens);
 
-  const setoresArr = Array.from(setorAll).map(s=>({ nome:titleCaseSetor(s), restantes: setorRestante[s]||0 }));
+  const setoresArr = Array.from(setorAll).map(s=>({ nome:titleCaseSetor(s), restantes: setorRestante[s]||0,
+    sku: setorSku[s]||0, auditados: setorAud[s]||0, parcial: (setorSku[s]||0) ? (setorAud[s]||0)/setorSku[s] : 0 }));
   const totalRestSetor = setoresArr.reduce((a,b)=>a+b.restantes,0);
   setoresArr.forEach(s=> s.pct = totalRestSetor? s.restantes/totalRestSetor : 0);
   setoresArr.sort((a,b)=> b.restantes-a.restantes || a.nome.localeCompare(b.nome));
