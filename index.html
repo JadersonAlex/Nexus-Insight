@@ -364,6 +364,80 @@ a:focus-visible, button:focus-visible{ outline:2px solid var(--cyan-soft); outli
 .btn-ghost:hover{ color:var(--text-0); background:var(--glass-strong); }
 
 /* ============================================================
+   LIMPAR DADOS — botão na topbar + modal de confirmação
+   ============================================================ */
+.clear-btn{
+  display:inline-flex; align-items:center; gap:8px; height:36px; padding:0 14px 0 12px;
+  border-radius:999px; cursor:pointer; font-family:var(--font-ui); font-size:12.5px; font-weight:700;
+  color:var(--error); background:rgba(251,113,133,.08); border:1px solid rgba(251,113,133,.28);
+  transition:background .2s, border-color .2s, box-shadow .2s, transform .15s; white-space:nowrap;
+}
+.clear-btn svg{ flex-shrink:0; }
+.clear-btn:hover{ background:rgba(251,113,133,.16); border-color:rgba(251,113,133,.55); box-shadow:0 8px 22px -10px rgba(251,113,133,.55); }
+.clear-btn:active{ transform:scale(.97); }
+.clear-btn:focus-visible, .clear-row input:focus-visible + .clear-check{ outline:2px solid var(--cyan); outline-offset:2px; }
+
+.modal-eyebrow.danger{ color:var(--error); }
+.clear-lead{ font-size:13px; color:var(--text-1); line-height:1.6; margin:-8px 0 16px; }
+.clear-list{ display:flex; flex-direction:column; gap:8px; }
+.clear-row{
+  position:relative; display:flex; align-items:center; gap:14px; padding:13px 16px; border-radius:16px; cursor:pointer;
+  background:var(--glass); border:1px solid var(--glass-border-soft);
+  transition:background .2s, border-color .2s;
+}
+.clear-row:hover{ background:var(--glass-strong); }
+.clear-row.on{ background:rgba(251,113,133,.07); border-color:rgba(251,113,133,.45); }
+.clear-row.empty{ opacity:.5; cursor:default; }
+.clear-row.empty:hover{ background:var(--glass); }
+.clear-row input{ position:absolute; opacity:0; pointer-events:none; }
+.clear-check{
+  width:20px; height:20px; border-radius:7px; flex-shrink:0; display:flex; align-items:center; justify-content:center;
+  border:1.5px solid var(--glass-border); background:rgba(255,255,255,.03); color:transparent; font-size:12px; font-weight:800;
+  transition:background .2s, border-color .2s, color .2s;
+}
+.clear-row.on .clear-check{ background:var(--error); border-color:var(--error); color:#2a050c; }
+.clear-row-ico{ width:30px; height:30px; border-radius:9px; background:rgba(255,255,255,.06); display:flex; align-items:center; justify-content:center; font-size:14px; flex-shrink:0; }
+.clear-row-main{ flex:1; min-width:0; }
+.clear-row-title{ font-size:13.5px; font-weight:600; color:var(--text-0); display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+.clear-row-meta{ font-size:11.5px; color:var(--text-2); margin-top:2px; }
+.clear-here{
+  font-size:9.5px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--cyan-soft);
+  background:rgba(76,201,240,.12); border:1px solid rgba(76,201,240,.28); padding:2px 7px; border-radius:999px;
+}
+.clear-tools{ display:flex; justify-content:space-between; align-items:center; margin:14px 2px 0; }
+.clear-tools .link-btn{ margin-top:0; }
+.clear-count{ font-size:11.5px; color:var(--text-2); font-weight:600; }
+.clear-note{
+  margin-top:14px; padding:11px 14px; border-radius:12px; font-size:11.5px; line-height:1.55; color:var(--text-2);
+  background:rgba(255,255,255,.03); border:1px solid var(--glass-border-soft);
+}
+.clear-note b{ color:var(--text-1); }
+.clear-actions{ display:flex; gap:10px; margin-top:18px; }
+.btn-danger{
+  background:linear-gradient(135deg, var(--error), #f4506a); color:#2a050c;
+  box-shadow:0 10px 26px -10px rgba(251,113,133,.6);
+}
+.btn-danger:hover{ opacity:.92; }
+.btn-danger:disabled{ opacity:.35; cursor:not-allowed; box-shadow:none; }
+.demo-btn{
+  position:fixed; right:24px; bottom:24px; z-index:60; display:inline-flex; align-items:center; gap:9px;
+  height:42px; padding:0 18px 0 14px; border-radius:999px; cursor:pointer;
+  font-family:var(--font-ui); font-size:12.5px; font-weight:700; color:var(--cyan-soft);
+  background:rgba(14,20,34,.92); border:1px solid rgba(76,201,240,.38);
+  backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+  box-shadow:0 16px 40px -14px rgba(0,0,0,.8), 0 0 0 1px rgba(76,201,240,.06);
+  transition:background .2s, border-color .2s, box-shadow .2s, transform .15s;
+}
+.demo-btn:hover{ background:rgba(76,201,240,.16); border-color:rgba(76,201,240,.65); box-shadow:0 16px 40px -14px rgba(76,201,240,.5); }
+.demo-btn:active{ transform:scale(.97); }
+.demo-btn:focus-visible{ outline:2px solid var(--cyan); outline-offset:2px; }
+@media (max-width:640px){
+  .demo-btn{ right:16px; bottom:16px; }
+  .clear-btn{ width:36px; padding:0; justify-content:center; }
+  .clear-btn .clear-btn-label{ display:none; }
+}
+
+/* ============================================================
    HERO
    ============================================================ */
 .hero{
@@ -1035,6 +1109,10 @@ footer a{ color:var(--text-2); }
 </aside>
 <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
 <div class="toast" id="toast"></div>
+<button class="demo-btn" id="demoBtn" type="button" title="Carregar os dados atuais do painel para testes" aria-label="Teste de dados: carregar dados atuais para testes">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3h6"/><path d="M10 3v6.2L4.6 18.1A2 2 0 0 0 6.3 21h11.4a2 2 0 0 0 1.7-2.9L14 9.2V3"/><path d="M7.5 15h9"/></svg>
+  <span>Teste de dados</span>
+</button>
 
 <div class="modal-backdrop" id="importBackdrop">
   <div class="modal" role="dialog" aria-modal="true" aria-labelledby="importTitle">
@@ -1102,6 +1180,29 @@ footer a{ color:var(--text-2); }
   </div>
 </div>
 
+<div class="modal-backdrop" id="clearBackdrop">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="clearTitle">
+    <div class="modal-head">
+      <div>
+        <div class="modal-eyebrow danger">Limpar dados</div>
+        <div class="modal-title" id="clearTitle">O que você quer limpar?</div>
+      </div>
+      <button class="modal-close" id="clearClose" type="button" aria-label="Fechar">✕</button>
+    </div>
+    <p class="clear-lead">Marque o que deve ser zerado. Depois é só importar uma nova planilha.</p>
+    <div class="clear-list" id="clearList"></div>
+    <div class="clear-tools">
+      <button class="link-btn" id="clearToggleAll" type="button">Selecionar tudo</button>
+      <span class="clear-count" id="clearCount"></span>
+    </div>
+    <div class="clear-note"><b>Seu arquivo de planilha não é alterado.</b> A limpeza vale para esta sessão: ao recarregar a página, os dados que vêm embutidos neste arquivo voltam.</div>
+    <div class="clear-actions">
+      <button class="btn btn-ghost" id="clearCancel" type="button">Cancelar</button>
+      <button class="btn btn-danger" id="clearConfirm" type="button" disabled>Limpar dados</button>
+    </div>
+  </div>
+</div>
+
 <div class="app">
 
   <header class="topbar">
@@ -1112,6 +1213,10 @@ footer a{ color:var(--text-2); }
       <div class="breadcrumb"><span id="breadcrumbRoot">Dashboard</span><span class="crumb-sep" id="crumbSep">/</span><span id="breadcrumbView">Auditoria de Etiqueta</span></div>
     </div>
     <div class="topbar-right">
+      <button class="clear-btn" id="clearBtn" type="button" title="Limpar dados do painel" aria-label="Limpar dados do painel" aria-haspopup="dialog">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"/><path d="M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+        <span class="clear-btn-label">Limpar dados</span>
+      </button>
       <div class="live-tag"><span class="live-dot"></span><span id="updateLabel">Atualizado em 14/09/2026</span></div>
     </div>
   </header>
@@ -1897,8 +2002,10 @@ function render(key, animateFromPrev){
   renderGauges(d, prev);
   renderSubPanel(d);
   renderFlow(d);
-  document.getElementById('updateLabel').textContent = 'Atualizado em ' + d.ultimaAtualizacao;
+  document.getElementById('updateLabel').textContent = d.ultimaAtualizacao ? 'Atualizado em ' + d.ultimaAtualizacao : 'Sem dados · importe uma planilha';
   updateRupturaBox();
+  const ft = k => DATA[k].ultimaAtualizacao || 'sem dados';
+  document.getElementById('footerDate').textContent = `Etiqueta · última leitura ${ft('etiqueta')} · Presença · última leitura ${ft('presenca')}`;
   prevData = d;
 }
 
@@ -3231,7 +3338,7 @@ function initImportModal(){
       const { headers, rows } = await readFileAsRows(file);
       const result = importTarget === 'validade'
         ? buildValidadeDatasetFromRows(headers, rows)
-        : buildDatasetFromRows(headers, rows, importTarget, DATA[importTarget].ultimaAtualizacao);
+        : buildDatasetFromRows(headers, rows, importTarget, DATA[importTarget].ultimaAtualizacao || new Date().toLocaleDateString('pt-BR'));
       if(result.error){
         const cols = importTarget === 'validade' ? '"Produto", "Data de Validade"' : '"Colaborador", "Situação"';
         showErrorStage('Colunas obrigatórias não encontradas',
@@ -3417,6 +3524,165 @@ function initRuptura(){
   inp.addEventListener('blur', updateRupturaBox);
 }
 
+/* ============================================================
+   LIMPAR DADOS — zera as bases selecionadas e redesenha o painel
+   ============================================================ */
+const CLEAR_TARGETS = [
+  { key:'etiqueta', icon:'🏷️', label:'Auditoria de Etiqueta' },
+  { key:'presenca', icon:'👁️', label:'Auditoria de Presença' },
+  { key:'ruptura',  icon:'📉', label:'Ruptura' },
+  { key:'validade', icon:'⏳', label:'Validade' },
+];
+
+function emptyAuditDataset(){
+  return {
+    totalSku:0, semEstoque:0, comEstoque:0, restantes:0, auditados:0, acertos:0, erros:0,
+    pctConclusao:0, pctPrecisao:0, colaboradoresN:0,
+    ranking:[], setores:[], corredores:[],
+    horas:[0,0,0,0,0,0,0,0], horaStart:7,
+    ultimaAtualizacao:'',
+  };
+}
+
+function clearInfo(key){
+  if(key === 'validade'){
+    const n = VALIDADE_DATA.items.length;
+    return { has:n>0, meta: n ? plural(n,'produto','produtos') + ' na base' : 'Sem dados' };
+  }
+  const d = DATA[key], nl = (NL_DATA[key] && NL_DATA[key].items) ? NL_DATA[key].items.length : 0;
+  const has = d.totalSku > 0 || d.ranking.length > 0 || nl > 0 || (key==='ruptura' && rupSku > 0);
+  return { has, meta: has ? `${plural(d.auditados,'item auditado','itens auditados')} · ${plural(d.colaboradoresN,'colaborador','colaboradores')}` : 'Sem dados' };
+}
+
+function clearDatasets(keys, silent){
+  keys.forEach(k=>{
+    if(k === 'validade'){
+      VALIDADE_DATA = { items:[], ultimaAtualizacao:'' };
+      return;
+    }
+    DATA[k] = emptyAuditDataset();
+    NL_DATA[k] = { items:[], ultimaAtualizacao:'', maxDias:0, agrup:'Local' };
+    delete nlJanela[k];
+    if(k === 'ruptura'){
+      rupSku = 0;
+      try{ localStorage.removeItem('nexus_ruptura_sku'); }catch(e){}
+    }
+  });
+  nlLocal = null;
+  if(silent) return;
+  if(keys.includes(state)) render(state, true);
+  if(keys.includes('validade')) renderValidade();
+}
+
+function initClearData(){
+  const backdrop = document.getElementById('clearBackdrop');
+  const list = document.getElementById('clearList');
+  const confirmBtn = document.getElementById('clearConfirm');
+  const toggleAll = document.getElementById('clearToggleAll');
+  const countEl = document.getElementById('clearCount');
+  let selected = new Set();
+
+  function currentKey(){
+    if(currentView === 'validade') return 'validade';
+    if(currentView === 'dashboard') return state;
+    return null;
+  }
+
+  function refresh(){
+    const available = CLEAR_TARGETS.filter(t=> clearInfo(t.key).has).map(t=>t.key);
+    list.querySelectorAll('.clear-row').forEach(row=>{
+      const k = row.dataset.key, on = selected.has(k);
+      row.classList.toggle('on', on);
+      row.querySelector('input').checked = on;
+      row.querySelector('.clear-check').textContent = on ? '✓' : '';
+    });
+    const n = selected.size;
+    confirmBtn.disabled = n === 0;
+    confirmBtn.textContent = n > 1 ? `Limpar ${n} bases` : 'Limpar dados';
+    countEl.textContent = available.length ? (n ? `${n} de ${available.length} selecionada${n>1?'s':''}` : 'Nada selecionado') : '';
+    toggleAll.hidden = available.length === 0;
+    toggleAll.textContent = (n === available.length && n > 0) ? 'Desmarcar tudo' : 'Selecionar tudo';
+  }
+
+  function openModal(){
+    const here = currentKey();
+    selected = new Set();
+    list.innerHTML = '';
+    CLEAR_TARGETS.forEach(t=>{
+      const info = clearInfo(t.key);
+      const row = document.createElement('label');
+      row.className = 'clear-row' + (info.has ? '' : ' empty');
+      row.dataset.key = t.key;
+      row.innerHTML = `
+        <input type="checkbox" ${info.has ? '' : 'disabled'}>
+        <span class="clear-check"></span>
+        <span class="clear-row-ico">${t.icon}</span>
+        <span class="clear-row-main">
+          <span class="clear-row-title">${t.label}${t.key===here && info.has ? '<span class="clear-here">Tela atual</span>' : ''}</span>
+          <span class="clear-row-meta">${info.meta}</span>
+        </span>`;
+      row.querySelector('input').addEventListener('change', e=>{
+        if(e.target.checked) selected.add(t.key); else selected.delete(t.key);
+        refresh();
+      });
+      list.appendChild(row);
+    });
+    if(here && clearInfo(here).has) selected.add(here);
+    refresh();
+    backdrop.classList.add('show');
+    document.getElementById('clearCancel').focus();
+  }
+  function closeModal(){
+    backdrop.classList.remove('show');
+    document.getElementById('clearBtn').focus();
+  }
+
+  toggleAll.addEventListener('click', ()=>{
+    const available = CLEAR_TARGETS.filter(t=> clearInfo(t.key).has).map(t=>t.key);
+    selected = (selected.size === available.length) ? new Set() : new Set(available);
+    refresh();
+  });
+
+  document.getElementById('clearBtn').addEventListener('click', openModal);
+  document.getElementById('clearClose').addEventListener('click', closeModal);
+  document.getElementById('clearCancel').addEventListener('click', closeModal);
+  backdrop.addEventListener('click', e=>{ if(e.target === backdrop) closeModal(); });
+  document.addEventListener('keydown', e=>{ if(e.key === 'Escape' && backdrop.classList.contains('show')) closeModal(); });
+
+  confirmBtn.addEventListener('click', ()=>{
+    if(!selected.size) return;
+    const keys = CLEAR_TARGETS.map(t=>t.key).filter(k=> selected.has(k));
+    const names = CLEAR_TARGETS.filter(t=> selected.has(t.key)).map(t=>t.label);
+    clearDatasets(keys);
+    closeModal();
+    showToast(names.length === 1 ? `Dados limpos: ${names[0]}.` : `Dados limpos: ${names.length} bases.`);
+  });
+}
+
+/* ============================================================
+   TESTE DE DADOS — o painel abre vazio; este botão carrega a base
+   embutida (dados atuais) para testes
+   ============================================================ */
+const DEMO_SNAPSHOT = { DATA: structuredClone(DATA), NL: structuredClone(NL_DATA), VAL: structuredClone(VALIDADE_DATA) };
+
+function loadDemoData(){
+  Object.keys(DEMO_SNAPSHOT.DATA).forEach(k=>{ DATA[k] = structuredClone(DEMO_SNAPSHOT.DATA[k]); });
+  Object.keys(DEMO_SNAPSHOT.NL).forEach(k=>{ NL_DATA[k] = structuredClone(DEMO_SNAPSHOT.NL[k]); });
+  VALIDADE_DATA = structuredClone(DEMO_SNAPSHOT.VAL);
+  Object.keys(nlJanela).forEach(k=> delete nlJanela[k]);
+  nlLocal = null;
+  render(state, true);
+  renderValidade();
+  showToast('Dados de teste carregados.');
+}
+
+function initDemoData(){
+  document.getElementById('demoBtn').addEventListener('click', loadDemoData);
+  try{ localStorage.removeItem('nexus_ruptura_sku'); }catch(e){}
+  rupSku = 0;
+  clearDatasets(['etiqueta','presenca','ruptura','validade'], true);   // começa tudo limpo
+}
+
 /* ---------- init ---------- */
 buildKpiRow();
 buildValKpiRow();
@@ -3425,6 +3691,8 @@ initGauges();
 initSidebarNav();
 initSidebarToggle();
 initImportModal();
+initClearData();
+initDemoData();
 initSubTabs();
 initNaoLidos();
 initRuptura();
