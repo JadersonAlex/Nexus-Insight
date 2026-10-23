@@ -1054,6 +1054,82 @@ footer a{ color:var(--text-2); }
   .hero{ padding:56px 8px 30px; }
   .breadcrumb{ font-size:12px; }
 }
+
+
+/* ---------- Relatório de Itens (aba) ---------- */
+.ri-scroll{ max-height:640px; overflow:auto; border:1px solid var(--glass-border-soft); border-radius:14px; background:rgba(255,255,255,.02); }
+.ri-table{ width:100%; border-collapse:collapse; font-size:13px; min-width:680px; }
+.ri-table th{
+  position:sticky; top:0; z-index:1; background:#0e1a30; color:var(--cyan-soft);
+  font-size:10.5px; font-weight:700; letter-spacing:.11em; text-transform:uppercase;
+  padding:12px 14px; text-align:left; white-space:nowrap; border-bottom:1px solid rgba(76,201,240,.32);
+}
+.ri-table td{ padding:10px 14px; color:var(--text-1); border-bottom:1px solid var(--glass-border-soft); border-right:1px solid rgba(255,255,255,.035); }
+.ri-table td:last-child, .ri-table th:last-child{ border-right:none; }
+.ri-table tbody tr:nth-child(even) td{ background:rgba(255,255,255,.025); }
+.ri-table tbody tr:hover td{ background:rgba(76,201,240,.06); }
+.ri-table .c{ text-align:center; }
+.ri-table th.c{ text-align:center; }
+.ri-table .n{ text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; }
+.ri-table th.n{ text-align:right; }
+.ri-table .idx{ width:46px; color:var(--text-2); font-weight:600; }
+.ri-table .cod{ font-variant-numeric:tabular-nums; white-space:nowrap; }
+.ri-table .prod{ color:var(--text-0); font-weight:600; }
+.ri-table .money{ color:var(--warning); font-weight:700; }
+.ri-table .empty{ text-align:center; padding:34px 14px; color:var(--text-2); }
+.ri-note{
+  margin:0 0 16px; padding:11px 15px; border-radius:14px; font-size:12.5px; font-weight:500; color:var(--text-1);
+  background:rgba(251,191,36,.09); border:1px solid rgba(251,191,36,.3);
+}
+.ri-note b{ color:var(--warning); }
+
+/* ---------- impressão — Não lidos com vendas (estilo planilha) ---------- */
+#printSheet{ display:none; }
+@media print{
+  @page{ size:A4 landscape; margin:10mm 10mm 12mm; }
+  html,body{ background:#fff !important; height:auto !important; min-height:0 !important; overflow:visible !important; }
+  body > *:not(#printSheet){ display:none !important; }
+  #printSheet{
+    display:block !important; position:static !important; color:#0a1120;
+    font-family:var(--font-ui); font-size:9.5pt; line-height:1.35;
+    -webkit-print-color-adjust:exact; print-color-adjust:exact;
+  }
+  #printSheet *{ -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  .ps-head{ display:flex; align-items:center; justify-content:space-between; gap:16px; padding:0 0 9px; }
+  .ps-brand{ display:flex; align-items:center; gap:10px; }
+  .ps-logo{ width:34px; height:34px; border-radius:9px; background:#0a1120; padding:4px; display:flex; align-items:center; justify-content:center; }
+  .ps-logo img{ width:100%; height:100%; object-fit:contain; }
+  .ps-word{ font-family:var(--font-display); font-weight:800; font-size:13.5pt; letter-spacing:.03em; color:#0a1120; line-height:1.05; }
+  .ps-tag{ font-size:7.5pt; font-weight:600; color:#6b7a92; letter-spacing:.04em; margin-top:2px; }
+  .ps-stamp{ text-align:right; font-size:7.5pt; color:#6b7a92; font-weight:600; line-height:1.5; }
+  .ps-stamp b{ color:#0a1120; font-weight:700; }
+  .ps-rule{ height:3pt; border-radius:2pt; margin-bottom:11px; background:linear-gradient(90deg,#4cc9f0 0%,#8b7cf6 100%); }
+  .ps-title{ font-family:var(--font-display); font-weight:700; font-size:17pt; color:#0a1120; line-height:1.1; }
+  .ps-sub{ font-size:8.5pt; color:#6b7a92; font-weight:500; margin:3px 0 10px; }
+  .ps-meta{ width:100%; border-collapse:collapse; margin-bottom:10px; table-layout:fixed; }
+  .ps-meta td{ border:.5pt solid #c3cddc; background:#f1f6fb; padding:5px 9px; vertical-align:top; }
+  .ps-meta .k{ display:block; font-size:6.5pt; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:#6b7a92; margin-bottom:2px; }
+  .ps-meta .v{ display:block; font-size:9.5pt; font-weight:700; color:#0a1120; word-break:break-word; }
+  .ps-table{ width:100%; border-collapse:collapse; font-size:9pt; }
+  .ps-table thead{ display:table-header-group; }
+  .ps-table tfoot{ display:table-row-group; }
+  .ps-table tr{ break-inside:avoid; page-break-inside:avoid; }
+  .ps-table th{
+    background:#0e1a30; color:#8fe3ff; border:.5pt solid #0e1a30; padding:6px 8px; text-align:left;
+    font-size:7pt; font-weight:700; letter-spacing:.11em; text-transform:uppercase; white-space:nowrap;
+  }
+  .ps-table td{ border:.5pt solid #c3cddc; padding:4px 8px; color:#0a1120; vertical-align:middle; }
+  .ps-table tbody tr:nth-child(even) td{ background:#f1f6fb; }
+  .ps-table .c{ text-align:center; }
+  .ps-table .n{ text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; }
+  .ps-table .idx{ width:30px; color:#6b7a92; font-weight:600; }
+  .ps-table .cod{ font-variant-numeric:tabular-nums; color:#334155; white-space:nowrap; }
+  .ps-table .prod{ font-weight:600; }
+  .ps-table .money{ font-weight:700; }
+  .ps-table tfoot td{ background:#dff4fc; border-color:#9fd8ee; font-weight:700; color:#0a1120; }
+  .ps-table th.n{ text-align:right; }
+  .ps-foot{ margin-top:9px; font-size:7pt; color:#6b7a92; font-weight:500; display:flex; justify-content:space-between; gap:12px; }
+}
 </style>
 </head>
 <body>
@@ -1275,6 +1351,7 @@ footer a{ color:var(--text-2); }
     <button class="subtab-btn" data-subtab="setores"><span class="subtab-icon">📦</span>Setores</button>
     <button class="subtab-btn" data-subtab="corredores"><span class="subtab-icon">📍</span>Corredores</button>
     <button class="subtab-btn" id="subtabNaoLidos" data-subtab="naolidos"><span class="subtab-icon">🛒</span>Não Lidos com vendas</button>
+    <button class="subtab-btn" id="subtabRelatorio" data-subtab="relatorio"><span class="subtab-icon">📋</span>Relatório de Itens</button>
   </section>
 
   <div id="statPane">
@@ -1453,6 +1530,9 @@ footer a{ color:var(--text-2); }
           <button class="copy-img-btn" data-copy-target="#naoLidosWrap .panel" title="Copiar imagem deste indicador" aria-label="Copiar imagem deste indicador">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="9" cy="9" r="1.8"/><path d="M21 15l-5-5-9 9"/></svg>
           </button>
+          <button class="copy-img-btn print-btn" id="nlPrintBtn" type="button" title="Imprimir este indicador (com o filtro aplicado)" aria-label="Imprimir este indicador">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 9V3h10v6"/><rect x="3" y="9" width="18" height="9" rx="2.5"/><rect x="7" y="14" width="10" height="7" rx="1"/><circle cx="17.2" cy="12" r=".6" fill="currentColor"/></svg>
+          </button>
         </div>
       </div>
       <div class="nl-controls">
@@ -1479,6 +1559,31 @@ footer a{ color:var(--text-2); }
         </div>
       </div>
       <div class="bar-list bar-list-scroll" id="nlList"></div>
+    </div>
+  </section>
+
+  <section class="grid-row2" id="relItensWrap" style="grid-template-columns:1fr; display:none;">
+    <div class="panel p3">
+      <div class="panel-head">
+        <div>
+          <div class="panel-title">Relatório de Itens</div>
+          <div class="panel-sub" id="riSub"></div>
+        </div>
+        <div class="panel-head-actions">
+          <div class="panel-tag" id="riTag">0 itens</div>
+          <button class="copy-img-btn print-btn" id="riPrintBtn" type="button" title="Imprimir relatório (com o filtro aplicado)" aria-label="Imprimir relatório de itens">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 9V3h10v6"/><rect x="3" y="9" width="18" height="9" rx="2.5"/><rect x="7" y="14" width="10" height="7" rx="1"/><circle cx="17.2" cy="12" r=".6" fill="currentColor"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="ri-note" id="riNote" hidden></div>
+      <div class="nl-controls">
+        <div class="nl-field">
+          <label class="nl-label" id="riLocalLabel" for="riLocalSel">Local</label>
+          <select class="nl-select" id="riLocalSel"></select>
+        </div>
+      </div>
+      <div class="ri-scroll"><table class="ri-table" id="riTable"></table></div>
     </div>
   </section>
 
@@ -2008,6 +2113,7 @@ function renderSetoresTable(d){
 
 function renderSubPanel(d){
   if(subTab === 'naolidos'){ renderNaoLidos(); return; }
+  if(subTab === 'relatorio'){ renderRelItens(); return; }
   if(subTab === 'destaque' || subTab === 'estatistica') return; // handled elsewhere
   if(subTab === 'setores'){ renderSetoresTable(d); return; }
   const meta = SUBTAB_META[subTab];
@@ -2024,6 +2130,7 @@ function showSubTabContent(){
   document.getElementById('subPanelWrap').style.display = isBarList ? '' : 'none';
   document.getElementById('setoresTableWrap').style.display = subTab === 'setores' ? '' : 'none';
   document.getElementById('naoLidosWrap').style.display = subTab === 'naolidos' ? '' : 'none';
+  document.getElementById('relItensWrap').style.display = subTab === 'relatorio' ? '' : 'none';
 }
 
 function initSubTabs(){
@@ -2618,7 +2725,7 @@ async function copyElementImage(targetSel, btn){
 }
 
 function initCopyImageButtons(){
-  document.querySelectorAll('.copy-img-btn').forEach(btn=>{
+  document.querySelectorAll('.copy-img-btn:not(.print-btn)').forEach(btn=>{
     btn.addEventListener('click', (e)=>{
       e.stopPropagation();
       copyElementImage(btn.dataset.copyTarget, btn);
@@ -3151,6 +3258,7 @@ function buildDatasetFromRows(headers, rows, type, fallbackDate){
   const colCod = findCol(norm, ['codigo','sku']), colProd = findCol(norm, ['produto','descricao']);
   const colDias = findCol(norm, ['dias sem venda']), colEst = findCol(norm, ['estoque atual']), colCusto = findCol(norm, ['custo ruptura']);
   const nlItems = [];
+  const restItems = [];
   const nlHasLocal = colCorredor!==-1 && fillRate(colCorredor)>0;
 
   const colTipo = findCol(norm, ['tipo de auditoria','tipo']);
@@ -3195,6 +3303,12 @@ function buildDatasetFromRows(headers, rows, type, fallbackDate){
     setorSku[setorRaw] = (setorSku[setorRaw]||0)+1;
     if(bucket==='remaining'){
       restantes++;
+      { const numR = v => parseFloat(String(v).replace(',','.')) || 0;
+        const dRaw = colDias!==-1 ? r[colDias] : '';
+        restItems.push({ c:colCod!==-1?String(r[colCod]||'').trim():'', p:colProd!==-1?String(r[colProd]||'').trim():'',
+          l:nlHasLocal?nlLocalCode(r[colCorredor]):titleCaseSetor(setorRaw), s:setorRaw,
+          d:(dRaw!=='' && dRaw!==null && dRaw!==undefined && !isNaN(Number(dRaw))) ? Number(dRaw) : null,
+          e:colEst!==-1?numR(r[colEst]):0, r:colCusto!==-1?Math.round(numR(r[colCusto])):0 }); }
       if(colDias!==-1 && r[colDias]!=='' && r[colDias]!==null && Number(r[colDias])<=NL_MAX_JANELA){
         const num = v => parseFloat(String(v).replace(',','.')) || 0;
         nlItems.push({ c:colCod!==-1?String(r[colCod]||''):'', p:colProd!==-1?String(r[colProd]||'').trim():'', l:nlHasLocal?nlLocalCode(r[colCorredor]):titleCaseSetor(setorRaw), d:Number(r[colDias]),
@@ -3275,6 +3389,7 @@ function buildDatasetFromRows(headers, rows, type, fallbackDate){
   if(type==='etiqueta'){ dataset.etiquetasDesatualizadas = desatualizadas; dataset.desatList = desatList; }
   dataset.naoLidos = nlItems;
   dataset.naoLidosAgrup = nlHasLocal ? 'Local' : 'Setor';
+  dataset.restItems = restItems;
 
   return {
     dataset,
@@ -3490,6 +3605,10 @@ function initImportModal(){
       renderValidade();
     } else {
       DATA[importTarget] = pending.dataset;
+      if(pending.dataset.restItems){
+        RI_DATA[importTarget] = { items: pending.dataset.restItems, agrup: pending.dataset.naoLidosAgrup, ult: pending.dataset.ultimaAtualizacao, completo:true };
+        riLocal = NL_TODOS;
+      }
       if(pending.dataset.naoLidos){
         NL_DATA[importTarget] = { items: pending.dataset.naoLidos, ultimaAtualizacao: pending.dataset.ultimaAtualizacao, maxDias: NL_MAX_JANELA, agrup: pending.dataset.naoLidosAgrup };
         delete nlJanela[importTarget];
@@ -3514,6 +3633,7 @@ let NL_DATA = {"presenca": {"items": [{"c": "1180438", "p": "CIGARRO DUNHILL ON 
 NL_DATA.presenca.maxDias = 0; NL_DATA.etiqueta.maxDias = 0;   // dados embutidos: só itens vendidos hoje
 NL_DATA.ruptura = {"items": [{"c": "1095959", "p": "ACENDEDOR FIAT LUX GEL 420G", "l": "Bazar", "d": 6, "s": "BAZAR", "e": 3, "r": 17}, {"c": "1083419", "p": "ACUCAR DEMERARA GUARANI 1KG", "l": "Mercearia Doce", "d": 3, "s": "MERCEARIA DOCE", "e": 2, "r": 9}, {"c": "97338", "p": "ALIM P/CAES VITTAMAX 10,1KG RACA PQ", "l": "Bazar", "d": 3, "s": "BAZAR", "e": 1, "r": 62}, {"c": "1150697", "p": "AMAC COMFORT CONC 1,5L HYDRA SEUM", "l": "Limpeza", "d": 3, "s": "LIMPEZA", "e": 2, "r": 43}, {"c": "1025487", "p": "AMAC COMFORT CONC 5L", "l": "Limpeza", "d": 2, "s": "LIMPEZA", "e": 2, "r": 125}, {"c": "1157312", "p": "AMAC YPE CONC 1,5L PINK", "l": "Limpeza", "d": 2, "s": "LIMPEZA", "e": 2, "r": 33}, {"c": "1053302", "p": "AZEITONA VDE RIVOLI FAT BD 1,8KG", "l": "Mercearia Salgada", "d": 5, "s": "MERCEARIA SALGADA", "e": 3, "r": 129}, {"c": "1193200", "p": "BRIGADEIRO JUNCO 400G CHOC", "l": "Mercearia Doce", "d": 4, "s": "MERCEARIA DOCE", "e": 3, "r": 18}, {"c": "1206803", "p": "CAR FGO EMP SEARA COXINHA DA ASA TRAD 900G", "l": "Perecivel Industrializado", "d": 3, "s": "PERECIVEL INDUSTRIALIZADO", "e": 20, "r": 465}, {"c": "1208284", "p": "CAR SU CONG SEARA TOUCINHO KG", "l": "Acougue / Carne Embalada", "d": 1, "s": "ACOUGUE / CARNE EMBALADA", "e": 117.258, "r": 1765}, {"c": "1110141", "p": "CAR SU MOIDA CONG FRIMASTER 500G", "l": "Acougue / Carne Embalada", "d": 6, "s": "ACOUGUE / CARNE EMBALADA", "e": 242, "r": 1744}, {"c": "1156512", "p": "CAR SU SALG COSTELA PATA NEGRA FRAC KG", "l": "Perecivel Industrializado", "d": 1, "s": "PERECIVEL INDUSTRIALIZADO", "e": 20.354, "r": 33}, {"c": "1154880", "p": "CAR SU SALG PAINEIRA ORELHA KG", "l": "Perecivel Industrializado", "d": 3, "s": "PERECIVEL INDUSTRIALIZADO", "e": 15.27, "r": 195}, {"c": "100661", "p": "CHA PRETO DR OETKER 18G 10SAQ", "l": "Mercearia Doce", "d": 4, "s": "MERCEARIA DOCE", "e": 3, "r": 12}, {"c": "1040599", "p": "CHIC POOSH 200G HORTELA", "l": "Mercearia Doce", "d": 6, "s": "MERCEARIA DOCE", "e": 2, "r": 7}, {"c": "1254247", "p": "CHOPP DE VINHO NOSSO CHOPE RED DRAF 300ML", "l": "Bebidas", "d": 7, "s": "BEBIDAS", "e": 2, "r": 5}, {"c": "1098362", "p": "COB P/SORV DR OETKER 190G MOR", "l": "Mercearia Doce", "d": 2, "s": "MERCEARIA DOCE", "e": 1, "r": 7}, {"c": "1207750", "p": "COB P/SORV MARVI 190G MORANGO", "l": "Mercearia Doce", "d": 1, "s": "MERCEARIA DOCE", "e": 2, "r": 10}, {"c": "1197588", "p": "CR P/PENTEAR KERAFORM 1KG LIVRE E SOLTO", "l": "Higiene Pessoal", "d": 3, "s": "HIGIENE PESSOAL", "e": 3, "r": 37}, {"c": "1197119", "p": "DESINF UAU ANTIBACT 2L 10% DESC FLOR E FRUTA", "l": "Limpeza", "d": 5, "s": "LIMPEZA", "e": 1, "r": 6}, {"c": "1208082", "p": "DESOD OLD SPICE GEL 80G VIP", "l": "Higiene Pessoal", "d": 1, "s": "HIGIENE PESSOAL", "e": 1, "r": 36}, {"c": "1343912", "p": "DET LIQ LIMPADUA 5L NEUTRO", "l": "Limpeza", "d": 2, "s": "LIMPEZA", "e": 3, "r": 33}, {"c": "1198345", "p": "DIFUSOR AROMAS COALA FLOR DE FIGO 100ML", "l": "Limpeza", "d": 2, "s": "LIMPEZA", "e": 1, "r": 9}, {"c": "78648", "p": "DOCE BRIGADEIRO TRIANG MINEIRO 400G", "l": "Mercearia Doce", "d": 2, "s": "MERCEARIA DOCE", "e": 2, "r": 11}, {"c": "1058131", "p": "DOCE CREMOSO OLIVEIRA 900G LEITE E SORO", "l": "Mercearia Doce", "d": 5, "s": "MERCEARIA DOCE", "e": 3, "r": 28}, {"c": "1204352", "p": "DROPS FREEGELLS 12X27,9G MORANGO", "l": "Mercearia Doce", "d": 3, "s": "MERCEARIA DOCE", "e": 3, "r": 22}, {"c": "1053840", "p": "ENXAGUANTE ICEFRESH 250ML MENTA PLUS", "l": "Higiene Pessoal", "d": 3, "s": "HIGIENE PESSOAL", "e": 1, "r": 7}, {"c": "1074184", "p": "FACA STRAWPLAST FORTE CRISTAL C/50", "l": "Bazar", "d": 2, "s": "BAZAR", "e": 3, "r": 26}, {"c": "62704", "p": "FEIJAO FRADINHO COMBRASIL 500G", "l": "Mercearia Salgada", "d": 5, "s": "MERCEARIA SALGADA", "e": 1, "r": 4}, {"c": "1174633", "p": "FRALDA ADULTO BIGFRAL CLASSIC G C/7", "l": "Higiene Pessoal", "d": 4, "s": "HIGIENE PESSOAL", "e": 1, "r": 14}, {"c": "1157546", "p": "FRIGIDEIRA P/OVO ALEGRETE ENJOY 14CM VERM", "l": "Bazar", "d": 5, "s": "BAZAR", "e": 3, "r": 35}, {"c": "1057168", "p": "FUNIL PLASDURAN GRANDE R430070", "l": "Bazar", "d": 4, "s": "BAZAR", "e": 1, "r": 4}, {"c": "1117209", "p": "GELEIA HOMEMADE 320G ABAC/HORT", "l": "Mercearia Doce", "d": 2, "s": "MERCEARIA DOCE", "e": 1, "r": 16}, {"c": "40513", "p": "HAMB BOV PERDIGAO 672G DEFUMADO", "l": "Perecivel Industrializado", "d": 5, "s": "PERECIVEL INDUSTRIALIZADO", "e": 384, "r": 4654}, {"c": "1214084", "p": "IOG BATAVO PENSE ZERO 1150G MAMAO", "l": "Lacteo e Perecivel Fresco", "d": 3, "s": "LACTEO E PERECIVEL FRESCO", "e": 16, "r": 167}, {"c": "94982", "p": "KIMILHO FLOCAO YOKI 500G", "l": "Mercearia Salgada", "d": 3, "s": "MERCEARIA SALGADA", "e": 1, "r": 3}, {"c": "1147008", "p": "KIT OX SH375ML+COND 170ML LISO DURADOURO", "l": "Higiene Pessoal", "d": 3, "s": "HIGIENE PESSOAL", "e": 3, "r": 81}, {"c": "1214284", "p": "LAVA ROUPA LIQ BABY SOFT 3L AZUL", "l": "Limpeza", "d": 6, "s": "LIMPEZA", "e": 4, "r": 44}, {"c": "1273061", "p": "LAVA ROUPA LIQ BRILHANTE 3L PERF E CUIDADO EXTRA", "l": "Limpeza", "d": 3, "s": "LIMPEZA", "e": 1, "r": 24}, {"c": "1343964", "p": "LAVA ROUPA LIQ ODD 5L COCO LAVAGEM COMPLETA", "l": "Limpeza", "d": 5, "s": "LIMPEZA", "e": 4, "r": 116}, {"c": "1200315", "p": "LAVA ROUPA PO BRILHANTE 800G PERF EXTRAORD", "l": "Limpeza", "d": 5, "s": "LIMPEZA", "e": 4, "r": 42}, {"c": "1200256", "p": "LAVA ROUPA PO OMO LAVANDER PRO 8KG", "l": "Limpeza", "d": 1, "s": "LIMPEZA", "e": 2, "r": 239}, {"c": "1209208", "p": "LAVA ROUPA PO TIXAN 8KG PRIMAVERA", "l": "Limpeza", "d": 4, "s": "LIMPEZA", "e": 3, "r": 177}, {"c": "1104612", "p": "LIMP CIF CREM LV450ML PG360ML BCO", "l": "Limpeza", "d": 3, "s": "LIMPEZA", "e": 1, "r": 8}, {"c": "1042012", "p": "LIMP VEJA COZINHA GT 500ML30% DESC LIMAO", "l": "Limpeza", "d": 1, "s": "LIMPEZA", "e": 3, "r": 63}, {"c": "1157788", "p": "LIMP VEJA DESENG COZINHA SC 400ML LAVANDA", "l": "Limpeza", "d": 5, "s": "LIMPEZA", "e": 4, "r": 32}, {"c": "1185338", "p": "LIMP VEJA PERF SENSACOES 2L TULIPA DA HOLANDA", "l": "Limpeza", "d": 6, "s": "LIMPEZA", "e": 2, "r": 24}, {"c": "4651", "p": "LUSTRA MOVEIS BRAVO REVITALIZA 500ML LAVANDA", "l": "Limpeza", "d": 7, "s": "LIMPEZA", "e": 3, "r": 44}, {"c": "1232184", "p": "MAIONESE PREDILECTA BD 3KG", "l": "Mercearia Salgada", "d": 7, "s": "MERCEARIA SALGADA", "e": 2, "r": 37}, {"c": "1177050", "p": "MASSA MOSMANN INT 300G GRAO DE BICO", "l": "Mercearia Salgada", "d": 3, "s": "MERCEARIA SALGADA", "e": 4, "r": 33}, {"c": "95915", "p": "MINI COLORACAO COR&TON 135G 2.0 PRETO", "l": "Higiene Pessoal", "d": 5, "s": "HIGIENE PESSOAL", "e": 3, "r": 40}, {"c": "3479", "p": "MIST BOLO PRE MESCLA 5KG CHOC", "l": "Mercearia Doce", "d": 3, "s": "MERCEARIA DOCE", "e": 3, "r": 119}, {"c": "3473", "p": "MIST BOLO PRE MESCLA 5KG COCO", "l": "Mercearia Doce", "d": 3, "s": "MERCEARIA DOCE", "e": 1, "r": 24}, {"c": "2504", "p": "MOLHO AJI NO SHOYU 5L", "l": "Mercearia Salgada", "d": 6, "s": "MERCEARIA SALGADA", "e": 4, "r": 318}, {"c": "69847", "p": "MOLHO INGLES CHINEZINHO 1,01L", "l": "Mercearia Salgada", "d": 3, "s": "MERCEARIA SALGADA", "e": 1, "r": 5}, {"c": "1055829", "p": "MOLHO TOM PRAMESA SACHE 300G AZEITONA", "l": "Mercearia Salgada", "d": 6, "s": "MERCEARIA SALGADA", "e": 1, "r": 1}, {"c": "1028648", "p": "MOSTARDA AMARELA CEPERA 350G SABORES", "l": "Mercearia Salgada", "d": 4, "s": "MERCEARIA SALGADA", "e": 1, "r": 6}, {"c": "59970", "p": "PANO LIMPEZA LEVE ALKLIN 33X50 C/5 ROSA", "l": "Bazar", "d": 2, "s": "BAZAR", "e": 2, "r": 7}, {"c": "82417", "p": "PANO M USO ALKLIN 36X40 C/2 AMARELO", "l": "Bazar", "d": 3, "s": "BAZAR", "e": 1, "r": 3}, {"c": "93434", "p": "PANO M USO SCOTT DURAMAX C/1", "l": "Bazar", "d": 3, "s": "BAZAR", "e": 2, "r": 15}, {"c": "1204633", "p": "PAO DE MEL BAUDUCCO 180G", "l": "Mercearia Salgada", "d": 1, "s": "MERCEARIA SALGADA", "e": 1, "r": 21}, {"c": "1166708", "p": "PENEIRA SANREMO CASAR 14,5CM", "l": "Bazar", "d": 2, "s": "BAZAR", "e": 2, "r": 20}, {"c": "63258", "p": "QJ POLENGHI SELECTION 125G CAMEMBERT", "l": "Lacteo e Perecivel Fresco", "d": 7, "s": "LACTEO E PERECIVEL FRESCO", "e": 3, "r": 36}, {"c": "1275048", "p": "QJ T MINAS FRES MONTEMINAS LIGHT KG", "l": "Lacteo e Perecivel Fresco", "d": 2, "s": "LACTEO E PERECIVEL FRESCO", "e": 71.892, "r": 1690}, {"c": "1363898", "p": "QJ T MUSS VALE DO ITA KG", "l": "Lacteo e Perecivel Fresco", "d": 1, "s": "LACTEO E PERECIVEL FRESCO", "e": 1.439, "r": 38316}, {"c": "1093306", "p": "REMOVEDOR KING PLUS 500ML", "l": "Limpeza", "d": 3, "s": "LIMPEZA", "e": 2, "r": 20}, {"c": "59524", "p": "REPELENTE REPELEX LOCAO 100ML", "l": "Limpeza", "d": 3, "s": "LIMPEZA", "e": 4, "r": 27}, {"c": "1226042", "p": "SABAO BARRA GLIC 5X180G TRAD", "l": "Limpeza", "d": 2, "s": "LIMPEZA", "e": 1, "r": 5}, {"c": "70417", "p": "SABAO EM PASTA NEUTRAL 500G", "l": "Limpeza", "d": 6, "s": "LIMPEZA", "e": 3, "r": 15}, {"c": "1057177", "p": "SABONETE AVEIA DAVENE 90G CLASSICO", "l": "Higiene Pessoal", "d": 4, "s": "HIGIENE PESSOAL", "e": 1, "r": 3}, {"c": "1192162", "p": "SABONETE BIOFLEUR 1L ERVA DOCE", "l": "Higiene Pessoal", "d": 2, "s": "HIGIENE PESSOAL", "e": 1, "r": 10}, {"c": "1091010", "p": "SABONETE DOVE LIQ RF 200ML PELE SENSIVEL", "l": "Higiene Pessoal", "d": 4, "s": "HIGIENE PESSOAL", "e": 3, "r": 23}, {"c": "1104415", "p": "SABONETE FRANCIS INTENSO 80G BRANCO", "l": "Higiene Pessoal", "d": 6, "s": "HIGIENE PESSOAL", "e": 1, "r": 1}, {"c": "1213248", "p": "SABONETE LUX BOTANICALS LQ RF 200ML GARD/OL AMEND", "l": "Higiene Pessoal", "d": 3, "s": "HIGIENE PESSOAL", "e": 2, "r": 13}, {"c": "1149762", "p": "SABONETE PALM LIQ 250ML FIGO/ORQUID LUMINOUS OILS", "l": "Higiene Pessoal", "d": 1, "s": "HIGIENE PESSOAL", "e": 1, "r": 19}, {"c": "1043872", "p": "SABONETE PALM LIQ 250ML OLEO NUTRITIVO", "l": "Higiene Pessoal", "d": 0, "s": "HIGIENE PESSOAL", "e": 1, "r": 19}, {"c": "1231974", "p": "SAND HAV COLOR ESSENTIAL 1069 PTO 43/44", "l": "Bazar", "d": 3, "s": "BAZAR", "e": 1, "r": 14}, {"c": "1218842", "p": "SAND HAV TRACK WAVES 0001 BRANCO 41/42", "l": "Bazar", "d": 5, "s": "BAZAR", "e": 3, "r": 70}, {"c": "1209436", "p": "SH BOZZANO 325ML ANTICASPA", "l": "Higiene Pessoal", "d": 6, "s": "HIGIENE PESSOAL", "e": 3, "r": 52}, {"c": "1209439", "p": "SH BOZZANO 325ML ANTIQUEDA", "l": "Higiene Pessoal", "d": 6, "s": "HIGIENE PESSOAL", "e": 2, "r": 34}, {"c": "1189110", "p": "SH PALM 650ML ANTI CASPA CLASSICO", "l": "Higiene Pessoal", "d": 4, "s": "HIGIENE PESSOAL", "e": 2, "r": 45}, {"c": "1274634", "p": "SH PANTENE 300ML MOLECULAR BOND REPAIR", "l": "Higiene Pessoal", "d": 7, "s": "HIGIENE PESSOAL", "e": 1, "r": 20}, {"c": "1342992", "p": "SH SEDA 300ML MEGA CRESCIMENTO", "l": "Higiene Pessoal", "d": 3, "s": "HIGIENE PESSOAL", "e": 2, "r": 24}, {"c": "1067399", "p": "SUCO CASA BENTO INT 1L UVA", "l": "Bebidas", "d": 5, "s": "BEBIDAS", "e": 4, "r": 59}, {"c": "1211557", "p": "SUCO CONC DAFRUTA TROPICAL UVA 950ML", "l": "Bebidas", "d": 4, "s": "BEBIDAS", "e": 3, "r": 12}, {"c": "109860", "p": "TAPETE HIG SANOL DOG C/7UN", "l": "Bazar", "d": 4, "s": "BAZAR", "e": 1, "r": 13}, {"c": "1162932", "p": "TORRADA TORONTO 100G ALHO", "l": "Mercearia Salgada", "d": 6, "s": "MERCEARIA SALGADA", "e": 2, "r": 6}, {"c": "4859", "p": "VINHO NAC COUNTRY WINE 750ML BCO SECO", "l": "Bebidas", "d": 3, "s": "BEBIDAS", "e": 4, "r": 30}], "ultimaAtualizacao": "30/09/2026", "maxDias": 7, "agrup": "Setor"};
 let nlLocal = null, nlLimit = '10';
+let nlLastView = null;
 const NL_TODOS = '__todos__';
 const fmtBRL = n => n.toLocaleString('pt-BR',{style:'currency', currency:'BRL', maximumFractionDigits:0});
 
@@ -3550,6 +3670,7 @@ function renderNaoLidos(){
   list.sort((a,b)=> key(b) - key(a) || a.p.localeCompare(b.p));
   const total = list.length;
   if(nlLimit !== 'all') list = list.slice(0, Number(nlLimit));
+  nlLastView = { list: list.slice(), total, janela, agrup, isEt, local: nlLocal, limit: nlLimit, ult: nd.ultimaAtualizacao || '' };
 
   document.getElementById('nlTag').textContent = list.length === total ? plural(total,'item','itens') : `${fmtInt(list.length)} de ${fmtInt(total)} itens`;
   document.getElementById('nlSub').textContent = (janela === 0 ? 'Vendidos hoje' : `Última venda há até ${plural(janela,'dia','dias')}`)
@@ -3563,7 +3684,163 @@ function renderNaoLidos(){
   renderBarList('nlList', rows, {alt:true});
 }
 
+
+/* ---------- folha de impressão compartilhada (estilo planilha) ---------- */
+function psFlags(items, agrup, isEt){
+  return { showS: agrup !== 'Setor' && items.some(i=> i.s), showD: items.some(i=> typeof i.d === 'number'), showR: !isEt };
+}
+function psHead(f, agrup){
+  const cols = [{h:'Nº',c:'c'},{h:'Código'},{h:'Produto'},{h:agrup}];
+  if(f.showS) cols.push({h:'Setor'});
+  if(f.showD) cols.push({h:'Última venda'});
+  cols.push({h:'Estoque', c:'n'});
+  if(f.showR) cols.push({h:'Custo de ruptura', c:'n'});
+  return cols;
+}
+function psRow(i, idx, f){
+  const fmtEst = n => Number(n||0).toLocaleString('pt-BR',{maximumFractionDigits:3});
+  const ultTxt = d => d === 0 ? 'Hoje' : (d === 1 ? 'Há 1 dia' : `Há ${d} dias`);
+  return `<tr><td class="c idx">${idx+1}</td><td class="cod">${xmlEsc(i.c || '—')}</td><td class="prod">${xmlEsc(titleCaseName(i.p))}</td>`
+    + `<td>${xmlEsc(i.l || '—')}</td>`
+    + (f.showS ? `<td>${xmlEsc(i.s ? titleCaseSetor(i.s) : '—')}</td>` : '')
+    + (f.showD ? `<td>${typeof i.d === 'number' ? ultTxt(i.d) : '—'}</td>` : '')
+    + `<td class="n">${fmtEst(i.e)}</td>`
+    + (f.showR ? `<td class="n money">${fmtBRL(i.r || 0)}</td>` : '')
+    + `</tr>`;
+}
+
+/* cfg: { title, sub, metas:[[k,v]], head:[{h,c}], list, flags, docTitle } */
+function openPrintSheet(cfg){
+  const old = document.getElementById('printSheet'); if(old) old.remove();
+  const pad = n => String(n).padStart(2,'0');
+  const now = new Date();
+  const dia = `${pad(now.getDate())}/${pad(now.getMonth()+1)}/${now.getFullYear()}`;
+  const hora = `${pad(now.getHours())}:${pad(now.getMinutes())}`;
+  const logo = document.querySelector('.brand-mark img');
+  const f = cfg.flags;
+  const numFrom = cfg.head.findIndex(c=> c.h === 'Estoque');
+  const ths = cfg.head.map(c=> `<th class="${c.c||''}">${xmlEsc(c.h)}</th>`).join('');
+  const body = cfg.list.map((i,idx)=> psRow(i, idx, f)).join('');
+  const totR = cfg.list.reduce((a,i)=> a + (i.r || 0), 0);
+  const foot = `<tr><td colspan="${numFrom}">Total · ${xmlEsc(plural(cfg.list.length,'item','itens'))}</td><td class="n"></td>${f.showR ? `<td class="n money">${fmtBRL(totR)}</td>` : ''}</tr>`;
+  const metas = cfg.metas.map(([k,v])=> `<td><span class="k">${xmlEsc(k)}</span><span class="v">${xmlEsc(v)}</span></td>`).join('');
+
+  const sheet = document.createElement('div');
+  sheet.id = 'printSheet';
+  sheet.innerHTML = `
+    <div class="ps-head">
+      <div class="ps-brand">
+        <div class="ps-logo">${logo ? `<img src="${logo.src}" alt="">` : ''}</div>
+        <div><div class="ps-word">NEXUS INSIGHT</div><div class="ps-tag">Auditoria &amp; Dashboard Inteligente</div></div>
+      </div>
+      <div class="ps-stamp">Emitido em <b>${dia}</b> às <b>${hora}</b></div>
+    </div>
+    <div class="ps-rule"></div>
+    <div class="ps-title">${xmlEsc(cfg.title)}</div>
+    <div class="ps-sub">${xmlEsc(cfg.sub)}</div>
+    <table class="ps-meta"><tr>${metas}</tr></table>
+    <table class="ps-table"><thead><tr>${ths}</tr></thead><tbody>${body}</tbody><tfoot>${foot}</tfoot></table>
+    <div class="ps-foot"><span>Nexus Insight — relatório gerado a partir dos dados importados das planilhas de auditoria.</span><span>${dia} · ${hora}</span></div>`;
+  document.body.appendChild(sheet);
+
+  const cleanup = ()=>{ const el = document.getElementById('printSheet'); if(el) el.remove(); window.removeEventListener('afterprint', cleanup); };
+  window.addEventListener('afterprint', cleanup);
+  const prevTitle = document.title;
+  document.title = `${cfg.docTitle}_${dia.replace(/\//g,'-')}`;
+  requestAnimationFrame(()=> requestAnimationFrame(()=>{
+    try{ window.print(); } finally { document.title = prevTitle; }
+  }));
+}
+
+const safeName = t => String(t).replace(/[^\w-]+/g,'-').replace(/^-+|-+$/g,'');
+
+/* Imprimir — Não lidos com vendas */
+function printNaoLidos(){
+  const v = nlLastView;
+  if(!v || !v.list.length){ showToast('Não há itens para imprimir neste filtro.'); return; }
+  const f = psFlags(v.list, v.agrup, v.isEt);
+  const localTxt = v.local === NL_TODOS ? (v.agrup === 'Setor' ? 'Todos os setores' : 'Todos os locais') : v.local;
+  const janTxt = v.janela === 0 ? 'Vendidos hoje' : `Até ${plural(v.janela,'dia','dias')}`;
+  const exibTxt = v.list.length === v.total ? plural(v.total,'item','itens') : `${fmtInt(v.list.length)} de ${fmtInt(v.total)} itens`;
+  openPrintSheet({
+    title:'Não lidos com vendas',
+    sub:`${janTxt} e não foram lidos na auditoria · ordenado por ${v.isEt ? 'estoque atual' : 'custo de ruptura'}`,
+    metas:[['Auditoria', BREADCRUMB_LABEL[state]||''],[v.agrup, localTxt],['Última venda', janTxt],['Exibindo', exibTxt],['Última atualização', v.ult || '—']],
+    head: psHead(f, v.agrup), list: v.list, flags: f,
+    docTitle: `Nao-lidos-com-vendas_${safeName(localTxt)}`
+  });
+}
+
+/* ============================================================
+   RELATÓRIO DE ITENS — todos os itens não lidos (com estoque),
+   filtro por local e impressão
+   ============================================================ */
+let RI_DATA = {};            // { etiqueta|presenca|ruptura: { items, agrup, ult, completo } }
+let riLocal = NL_TODOS, riLastState = null;
+let riView = null;
+
+function riSource(){
+  const ri = RI_DATA[state];
+  if(ri && ri.completo) return { items: ri.items || [], agrup: ri.agrup || 'Local', ult: ri.ult || '', completo:true };
+  return { items: [], agrup: 'Local', ult: '', completo:false };
+}
+
+function renderRelItens(){
+  const isEt = state === 'etiqueta';
+  if(riLastState !== state){ riLastState = state; riLocal = NL_TODOS; }
+  const src = riSource();
+  const items = src.items, agrup = src.agrup;
+  document.getElementById('riLocalLabel').textContent = agrup;
+
+  const counts = {};
+  items.forEach(i=>{ counts[i.l] = (counts[i.l]||0) + 1; });
+  const locais = Object.keys(counts).sort((a,b)=> a.localeCompare(b,'pt-BR',{numeric:true}));
+  if(riLocal !== NL_TODOS && !counts[riLocal]) riLocal = NL_TODOS;
+  const sel = document.getElementById('riLocalSel');
+  sel.innerHTML = `<option value="${NL_TODOS}">Todos ${agrup==='Setor' ? 'os setores' : 'os locais'} (${fmtInt(items.length)})</option>`
+    + locais.map(l=>`<option value="${xmlEsc(l)}">${xmlEsc(l)} (${fmtInt(counts[l])})</option>`).join('');
+  sel.value = riLocal;
+
+  const list = (riLocal === NL_TODOS ? items.slice() : items.filter(i=> i.l === riLocal))
+    .sort((a,b)=> String(a.l).localeCompare(String(b.l),'pt-BR',{numeric:true}) || String(a.p).localeCompare(String(b.p),'pt-BR'));
+  riView = { list, total: items.length, agrup, isEt, local: riLocal, ult: src.ult, completo: src.completo };
+
+  document.getElementById('riTag').textContent = list.length === items.length ? plural(items.length,'item','itens') : `${fmtInt(list.length)} de ${fmtInt(items.length)} itens`;
+  document.getElementById('riSub').textContent = 'Itens com estoque que não foram lidos na auditoria · ordenado por ' + (agrup === 'Setor' ? 'setor' : 'local') + ' e produto';
+  const note = document.getElementById('riNote');
+  note.hidden = src.completo;
+  if(!note.hidden) note.innerHTML = '<b>Sem dados importados.</b> Este relatório mostra somente os itens não lidos que constam na planilha da auditoria. Importe a planilha (ícone de seta no menu AUDITORIA) para gerar a lista.';
+
+  const f = psFlags(list, agrup, isEt);
+  const head = psHead(f, agrup);
+  const ths = head.map(c=> `<th class="${c.c||''}">${xmlEsc(c.h)}</th>`).join('');
+  const body = list.length ? list.map((i,idx)=> psRow(i, idx, f)).join('')
+    : `<tr><td class="empty" colspan="${head.length}">${src.completo ? 'Nenhum item não lido neste filtro' : 'Nenhuma planilha importada para esta auditoria'}</td></tr>`;
+  document.getElementById('riTable').innerHTML = `<thead><tr>${ths}</tr></thead><tbody>${body}</tbody>`;
+}
+
+function printRelItens(){
+  const v = riView;
+  if(!v || !v.list.length){ showToast('Não há itens para imprimir neste filtro.'); return; }
+  const f = psFlags(v.list, v.agrup, v.isEt);
+  const localTxt = v.local === NL_TODOS ? (v.agrup === 'Setor' ? 'Todos os setores' : 'Todos os locais') : v.local;
+  const exibTxt = v.list.length === v.total ? plural(v.total,'item','itens') : `${fmtInt(v.list.length)} de ${fmtInt(v.total)} itens`;
+  openPrintSheet({
+    title:'Relatório de Itens',
+    sub:`Itens com estoque que não foram lidos na auditoria · ordenado por ${v.agrup === 'Setor' ? 'setor' : 'local'} e produto`,
+    metas:[['Auditoria', BREADCRUMB_LABEL[state]||''],[v.agrup, localTxt],['Exibindo', exibTxt],['Última atualização', v.ult || '—']],
+    head: psHead(f, v.agrup), list: v.list, flags: f,
+    docTitle: `Relatorio-de-itens_${safeName(BREADCRUMB_LABEL[state]||state)}_${safeName(localTxt)}`
+  });
+}
+
+function initRelItens(){
+  document.getElementById('riLocalSel').addEventListener('change', e=>{ riLocal = e.target.value; renderRelItens(); });
+  document.getElementById('riPrintBtn').addEventListener('click', e=>{ e.stopPropagation(); printRelItens(); });
+}
+
 function initNaoLidos(){
+  document.getElementById('nlPrintBtn').addEventListener('click', e=>{ e.stopPropagation(); printNaoLidos(); });
   document.getElementById('nlLocalSel').addEventListener('change', e=>{ nlLocal = e.target.value; renderNaoLidos(); });
   document.querySelectorAll('#nlSeg button').forEach(b=> b.addEventListener('click', ()=>{ nlLimit = b.dataset.limit; renderNaoLidos(); }));
   document.querySelectorAll('#nlJanSeg button').forEach(b=> b.addEventListener('click', ()=>{ nlJanela[state] = Number(b.dataset.dias); renderNaoLidos(); }));
@@ -3644,12 +3921,13 @@ function clearDatasets(keys, silent){
     DATA[k] = emptyAuditDataset();
     NL_DATA[k] = { items:[], ultimaAtualizacao:'', maxDias:0, agrup:'Local' };
     delete nlJanela[k];
+    delete RI_DATA[k];
     if(k === 'ruptura'){
       rupSku = 0;
       try{ localStorage.removeItem('nexus_ruptura_sku'); }catch(e){}
     }
   });
-  nlLocal = null;
+  nlLocal = null; riLocal = NL_TODOS;
   if(silent) return;
   if(keys.includes(state)) render(state, true);
   if(keys.includes('validade')) renderValidade();
@@ -3751,6 +4029,7 @@ function loadDemoData(){
   Object.keys(DEMO_SNAPSHOT.NL).forEach(k=>{ NL_DATA[k] = structuredClone(DEMO_SNAPSHOT.NL[k]); });
   VALIDADE_DATA = structuredClone(DEMO_SNAPSHOT.VAL);
   Object.keys(nlJanela).forEach(k=> delete nlJanela[k]);
+  RI_DATA = {}; riLocal = NL_TODOS;
   nlLocal = null;
   render(state, true);
   renderValidade();
@@ -3819,6 +4098,7 @@ initClearData();
 initDemoData();
 initSubTabs();
 initNaoLidos();
+initRelItens();
 initRuptura();
 initSpotlight();
 initCopyImageButtons();
