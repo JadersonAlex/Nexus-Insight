@@ -2443,10 +2443,45 @@ function embedSvg(svgEl, containerRect, skipDefs){
   return `<g transform="translate(${r.x},${r.y}) scale(${sx},${sy})">${inner}</g>`;
 }
 
+/* A imagem copiada segue o tema ativo. As cores do desenho (escritas para o tema escuro)
+   são convertidas para o equivalente claro quando o tema claro está ligado. */
+const SVG_LIGHT_MAP = {
+  '#121a2c':'#ffffff',            // fundo dos cards
+  '#f5f8fc':'#0f1b2d',            // texto principal
+  '#a9b8cf':'#43536b',            // texto secundário
+  '#ffffff':'#0f1b2d',            // destaques em branco
+  '#8fe3ff':'#0a7ca6',            // ciano suave (texto)
+  '#4cc9f0':'#0a9fd1',            // ciano
+  '#8b7cf6':'#6552e0',            // violeta
+  '#b9aefc':'#8f82ee',
+  '#34d399':'#059669',            // sucesso
+  '#fbbf24':'#c26a05',            // alerta
+  '#f59e0b':'#d97706',
+};
+function resolveSvgVars(str){
+  const cs = getComputedStyle(document.documentElement);
+  return str
+    .replace(/var\((--[\w-]+)\)/g, (m,n)=> (cs.getPropertyValue(n)||'').trim() || m)
+    .replace(/rgb\(\s*(\d+)\s+(\d+)\s+(\d+)\s*\/\s*([.\d]+)\s*\)/g, 'rgba($1,$2,$3,$4)');
+}
+function toLightSvg(str){
+  return str
+    .replace(/rgba\(255,\s*255,\s*255,\s*([.\d]+)\)/g, 'rgba(15,23,42,$1)')
+    .replace(/rgba\(76,\s*201,\s*240,\s*([.\d]+)\)/g, 'rgba(10,159,209,$1)')
+    .replace(/rgba\(139,\s*124,\s*246,\s*([.\d]+)\)/g, 'rgba(101,82,224,$1)')
+    .replace(/rgba\(52,\s*211,\s*153,\s*([.\d]+)\)/g, 'rgba(5,150,105,$1)')
+    .replace(/rgba\(251,\s*191,\s*36,\s*([.\d]+)\)/g, 'rgba(194,106,5,$1)')
+    .replace(/#[0-9a-fA-F]{6}\b/g, m=> SVG_LIGHT_MAP[m.toLowerCase()] || m);
+}
+
 function rasterize(width, height, innerSvg, scale){
   return new Promise((resolve,reject)=>{
+    const light = currentTheme() === 'light';
+    const bgCol = light ? '#eef2f8' : '#0a0f1c';
+    let body = resolveSvgVars(innerSvg);
+    if(light) body = toLightSvg(body);
     const svgString = `<svg xmlns="${SVGNS}" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">`
-      + roundedRect(0,0,width,height,0,'#0a0f1c') + innerSvg + `</svg>`;
+      + roundedRect(0,0,width,height,0,bgCol) + body + `</svg>`;
     const blob = new Blob([svgString], {type:'image/svg+xml;charset=utf-8'});
     const url = URL.createObjectURL(blob);
     const img = new Image();
@@ -2455,7 +2490,7 @@ function rasterize(width, height, innerSvg, scale){
       canvas.width = width*scale; canvas.height = height*scale;
       const ctx = canvas.getContext('2d');
       ctx.scale(scale,scale);
-      ctx.fillStyle = '#0a0f1c';
+      ctx.fillStyle = bgCol;
       ctx.fillRect(0,0,width,height);
       ctx.drawImage(img,0,0,width,height);
       URL.revokeObjectURL(url);
