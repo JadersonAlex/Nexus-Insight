@@ -604,6 +604,106 @@ a:focus-visible, button:focus-visible{ outline:2px solid var(--cyan-soft); outli
 .stale-table td.who{ color:var(--text-0); font-weight:600; }
 .stale-empty{ padding:26px 10px; text-align:center; color:var(--text-1); font-size:13.5px; line-height:1.5; }
 
+
+/* ---------- dashboard de etiquetas desatualizadas (modal) ---------- */
+.modal.modal-wide{ max-width:980px; }
+.sd-top{ display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap; margin:-8px 0 16px; }
+.sd-lead{ font-size:13px; color:var(--text-1); line-height:1.5; max-width:520px; }
+.sd-copy{
+  display:inline-flex; align-items:center; gap:9px; padding:11px 18px; border-radius:13px; border:1px solid transparent; cursor:pointer;
+  font-family:var(--font-ui); font-size:13px; font-weight:700; color:#04101c;
+  background:linear-gradient(135deg, var(--cyan), var(--violet)); box-shadow:0 10px 26px -10px rgba(76,201,240,.55);
+  transition:transform .15s, opacity .2s, box-shadow .2s;
+}
+.sd-copy:hover{ opacity:.93; transform:translateY(-1px); }
+.sd-copy:active{ transform:scale(.98); }
+.sd-copy:disabled{ opacity:.6; cursor:progress; }
+.sd-copy svg{ width:16px; height:16px; }
+.sd-copy.copied{ background:linear-gradient(135deg, var(--success), var(--cyan)); }
+html[data-theme="light"] .sd-copy{ color:#ffffff; }
+
+.sd-kpis{ display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:16px; }
+.sd-kpi{
+  position:relative; overflow:hidden; padding:16px 16px 14px; border-radius:18px;
+  background:linear-gradient(180deg, rgb(var(--ov) / .06), rgb(var(--ov) / .025)); border:1px solid var(--glass-border-soft);
+  animation:sdRise .55s cubic-bezier(.2,.8,.2,1) both;
+}
+.sd-kpi:nth-child(2){ animation-delay:.06s; } .sd-kpi:nth-child(3){ animation-delay:.12s; } .sd-kpi:nth-child(4){ animation-delay:.18s; }
+.sd-kpi::after{ content:''; position:absolute; right:-30px; top:-30px; width:90px; height:90px; border-radius:50%; background:radial-gradient(circle, rgba(251,191,36,.18), transparent 70%); pointer-events:none; }
+.sd-kpi.alt::after{ background:radial-gradient(circle, rgba(139,124,246,.2), transparent 70%); }
+.sd-kpi.cy::after{ background:radial-gradient(circle, rgba(76,201,240,.2), transparent 70%); }
+.sd-kpi-label{ font-size:10.5px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--text-2); }
+.sd-kpi-value{ font-family:var(--font-display); font-weight:700; font-size:30px; line-height:1.1; margin-top:8px; color:var(--warning); }
+.sd-kpi-value.txt{ font-size:16px; line-height:1.25; color:var(--text-0); margin-top:10px; font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.sd-kpi-meta{ font-size:11.5px; color:var(--text-1); margin-top:5px; }
+.sd-kpi-meta b{ color:var(--warning); }
+
+.sd-opts{ padding:16px 18px; border-radius:18px; margin-bottom:16px; background:var(--glass); border:1px solid var(--glass-border-soft); }
+.sd-opts-head{ display:flex; align-items:center; gap:14px; }
+.sd-opts-ico{ width:34px; height:34px; border-radius:11px; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:16px; background:rgba(251,191,36,.12); border:1px solid rgba(251,191,36,.28); }
+.sd-opts-main{ flex:1; min-width:0; }
+.sd-opts-title{ font-size:13.5px; font-weight:700; color:var(--text-0); }
+.sd-opts-sub{ font-size:11.5px; color:var(--text-2); margin-top:2px; }
+.sd-switch{ position:relative; width:46px; height:26px; flex-shrink:0; border-radius:999px; cursor:pointer; border:1px solid var(--glass-border);
+  background:rgb(var(--ov) / .08); transition:background .25s, border-color .25s; padding:0; }
+.sd-switch::after{ content:''; position:absolute; top:3px; left:3px; width:18px; height:18px; border-radius:50%; background:var(--text-1);
+  transition:transform .25s cubic-bezier(.2,.8,.2,1), background .25s; }
+.sd-switch[aria-checked="true"]{ background:linear-gradient(135deg, var(--cyan), var(--violet)); border-color:transparent; }
+.sd-switch[aria-checked="true"]::after{ transform:translateX(20px); background:#fff; }
+.sd-switch:focus-visible, .sd-chip:focus-visible, .sd-copy:focus-visible{ outline:2px solid var(--cyan); outline-offset:2px; }
+.sd-cols{ display:flex; flex-wrap:wrap; gap:8px; max-height:0; opacity:0; overflow:hidden; margin-top:0; transition:max-height .35s ease, opacity .25s, margin-top .25s; }
+.sd-opts.on .sd-cols{ max-height:140px; opacity:1; margin-top:14px; }
+.sd-chip{
+  display:inline-flex; align-items:center; gap:8px; padding:8px 13px; border-radius:999px; cursor:pointer;
+  font-family:var(--font-ui); font-size:12px; font-weight:600; color:var(--text-1);
+  background:rgb(var(--ov) / .04); border:1px solid var(--glass-border-soft); transition:all .2s;
+}
+.sd-chip:hover{ color:var(--text-0); background:var(--glass-strong); }
+.sd-chip .ck{ width:16px; height:16px; border-radius:5px; border:1.5px solid var(--glass-border); display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:800; color:transparent; transition:all .2s; }
+.sd-chip[aria-pressed="true"]{ color:var(--text-0); border-color:rgba(76,201,240,.5); background:linear-gradient(135deg, rgba(76,201,240,.16), rgba(139,124,246,.11)); }
+.sd-chip[aria-pressed="true"] .ck{ background:var(--cyan); border-color:var(--cyan); color:#04101c; }
+.sd-opts-note{ font-size:11px; color:var(--text-2); margin-top:10px; display:none; }
+.sd-opts.on .sd-opts-note{ display:block; }
+
+.sd-panel{ padding:18px 18px 8px; border-radius:20px; margin-bottom:16px; background:linear-gradient(180deg, rgb(var(--ov) / .05), rgb(var(--ov) / .02)); border:1px solid var(--glass-border-soft); }
+.sd-panel-head{ display:flex; align-items:baseline; justify-content:space-between; gap:12px; margin-bottom:14px; }
+.sd-panel-title{ font-family:var(--font-display); font-weight:600; font-size:16px; color:var(--text-0); }
+.sd-panel-sub{ font-size:11.5px; color:var(--text-2); margin-top:3px; }
+.sd-tag{ font-size:11px; font-weight:700; color:var(--warning); background:rgba(251,191,36,.1); border:1px solid rgba(251,191,36,.28); padding:5px 11px; border-radius:999px; white-space:nowrap; }
+.sd-rank{ display:flex; flex-direction:column; max-height:46vh; overflow-y:auto; padding-right:4px; }
+.sd-row{ display:flex; align-items:center; gap:14px; padding:11px 4px; border-top:1px solid var(--glass-border-soft); animation:sdRise .5s cubic-bezier(.2,.8,.2,1) both; }
+.sd-row:first-child{ border-top:none; }
+.sd-pos{ width:30px; height:30px; border-radius:10px; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:12.5px; font-weight:800; color:var(--text-1); background:rgb(var(--ov) / .06); }
+.sd-pos.p1{ background:linear-gradient(135deg,#fbbf24,#f59e0b); color:#2a1a02; }
+.sd-pos.p2{ background:linear-gradient(135deg,#dbe4f2,#9fb0c8); color:#142033; }
+.sd-pos.p3{ background:linear-gradient(135deg,#e9a56a,#c2763a); color:#2a1405; }
+.sd-av{ width:36px; height:36px; border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:800; color:var(--cyan-soft);
+  background:linear-gradient(135deg, rgba(76,201,240,.18), rgba(139,124,246,.18)); border:1px solid rgba(76,201,240,.28); }
+.sd-info{ flex:1; min-width:0; }
+.sd-name{ display:flex; align-items:baseline; gap:8px; font-size:13.5px; font-weight:700; color:var(--text-0); }
+.sd-name span:first-child{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.sd-mat{ font-size:11px; font-weight:500; color:var(--text-2); flex-shrink:0; }
+.sd-bar{ height:8px; border-radius:999px; background:rgb(var(--ov) / .07); margin-top:8px; overflow:hidden; }
+.sd-bar i{ display:block; height:100%; border-radius:999px; background:linear-gradient(90deg, var(--warning), #f59e0b); transform-origin:left; animation:sdGrow .9s cubic-bezier(.2,.8,.2,1) .15s both; box-shadow:0 0 14px -2px rgba(251,191,36,.55); }
+.sd-row:nth-child(1) .sd-bar i{ background:linear-gradient(90deg, #f59e0b, var(--warning), #fde68a); }
+.sd-ctx{ font-size:11px; color:var(--text-2); margin-top:6px; }
+.sd-ctx b{ color:var(--text-1); font-weight:600; }
+.sd-num{ text-align:right; flex-shrink:0; min-width:64px; }
+.sd-num strong{ display:block; font-family:var(--font-display); font-size:24px; line-height:1; font-weight:700; color:var(--warning); }
+.sd-num small{ display:block; font-size:11px; font-weight:600; color:var(--text-2); margin-top:4px; }
+.sd-det{ margin-bottom:6px; }
+.sd-det > summary{ list-style:none; cursor:pointer; display:flex; align-items:center; justify-content:space-between; gap:10px; padding:2px 0 14px; }
+.sd-det > summary::-webkit-details-marker{ display:none; }
+.sd-det > summary .chev{ transition:transform .25s; color:var(--text-2); }
+.sd-det[open] > summary .chev{ transform:rotate(180deg); }
+@keyframes sdRise{ from{ opacity:0; transform:translateY(10px); } to{ opacity:1; transform:none; } }
+@keyframes sdGrow{ from{ transform:scaleX(0); } to{ transform:scaleX(1); } }
+@media (max-width:760px){
+  .sd-kpis{ grid-template-columns:repeat(2,1fr); }
+  .sd-top{ flex-direction:column; align-items:stretch; } .sd-copy{ justify-content:center; }
+  .sd-av{ display:none; } .sd-num strong{ font-size:20px; }
+}
+
 /* ============================================================
    PANEL GRID
    ============================================================ */
@@ -1385,7 +1485,7 @@ html[data-theme="light"] .theme-opt.active{ background:rgba(10,159,209,.14); box
     <div class="modal-head">
       <div>
         <div class="modal-eyebrow warn">Auditoria de Etiqueta</div>
-        <div class="modal-title" id="staleTitle">Etiquetas desatualizadas</div>
+        <div class="modal-title" id="staleTitle">Dashboard · Etiquetas desatualizadas</div>
       </div>
       <button class="modal-close" id="staleClose" type="button" aria-label="Fechar">✕</button>
     </div>
@@ -4174,31 +4274,330 @@ function initStaleModal(){
   const backdrop = document.getElementById('staleBackdrop');
   const body = document.getElementById('staleModalBody');
   const esc = v => String(v==null?'':v).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const nf = n => Number(n||0).toLocaleString('pt-BR');
+  const pf = (n,d) => (n*100).toLocaleString('pt-BR',{minimumFractionDigits:d==null?1:d, maximumFractionDigits:d==null?1:d})+'%';
 
-  function open(){
+  /* colunas que podem aparecer no print */
+  const COLS = [
+    {k:'dh',    label:'Data e hora', w:1.25},
+    {k:'setor', label:'Setor',       w:1.35},
+    {k:'corr',  label:'Corredor',    w:.85},
+    {k:'cod',   label:'Código',      w:1.05},
+    {k:'prod',  label:'Produto',     w:2.6},
+    {k:'colab', label:'Colaborador', w:1.7},
+  ];
+  const PREF_KEY = 'nexus_stale_print';
+  let prefs = { on:false, cols:{dh:true,setor:true,corr:true,cod:true,prod:true,colab:true} };
+  try{
+    const s = JSON.parse(localStorage.getItem(PREF_KEY)||'null');
+    if(s && typeof s==='object'){ prefs.on = !!s.on; COLS.forEach(c=>{ if(s.cols && typeof s.cols[c.k]==='boolean') prefs.cols[c.k] = s.cols[c.k]; }); }
+  }catch(e){}
+  const savePrefs = ()=>{ try{ localStorage.setItem(PREF_KEY, JSON.stringify(prefs)); }catch(e){} };
+
+  /* ---------- dados agregados ---------- */
+  function aggregate(){
     const d = DATA.etiqueta || {};
     const list = Array.isArray(d.desatList) ? d.desatList : [];
+    const byColab = {}, bySetor = {};
+    list.forEach(i=>{
+      const k = i.n || '—';
+      byColab[k] = (byColab[k]||0)+1;
+      const s = i.s || '—';
+      bySetor[s] = (bySetor[s]||0)+1;
+    });
+    const totalRank = d.ranking || [];
+    const colabs = Object.entries(byColab).map(([raw,q])=>{
+      const p = parseColabName(raw);
+      const r = totalRank.find(x=> (p.matricula && x.matricula===p.matricula) || x.nome===p.nome);
+      return { raw, nome:p.nome || raw, matricula:p.matricula, qtd:q, itens: r? r.itens : 0 };
+    }).sort((a,b)=> b.qtd-a.qtd || a.nome.localeCompare(b.nome));
+    const setores = Object.entries(bySetor).sort((a,b)=> b[1]-a[1]);
+    return { d, list, colabs, setores, total:list.length };
+  }
+  const initials = nome => {
+    const p = String(nome||'').trim().split(/\s+/).filter(Boolean);
+    if(!p.length) return '?';
+    return (p[0][0] + (p.length>1 ? p[p.length-1][0] : '')).toUpperCase();
+  };
+  const dh = i => (i.d||i.h) ? [i.d,i.h].filter(Boolean).join(' ') : '—';
+
+  /* ---------- render ---------- */
+  function render(){
+    const { d, list, colabs, setores, total } = aggregate();
     if(!list.length){
       body.innerHTML = `<div class="stale-empty">${
         (d.etiquetasDesatualizadas>0)
           ? 'A lista detalhada não está disponível para estes dados. Importe a planilha de Etiqueta novamente para ver quais etiquetas estão desatualizadas e quem bipou.'
           : 'Nenhuma etiqueta desatualizada encontrada.'}</div>`;
-    } else {
-      const porQuem = {};
-      list.forEach(i=>{ const k = i.n || '—'; porQuem[k] = (porQuem[k]||0)+1; });
-      const chips = Object.entries(porQuem).sort((a,b)=>b[1]-a[1])
-        .map(([n,q])=>`<span class="stale-chip">${esc(n)}<b>${q}</b></span>`).join('');
-      const rows = list.map(i=>`<tr>
-          <td>${esc(i.c)}</td><td>${esc(i.p)}</td><td>${esc(i.s)}</td><td>${esc(i.l||'—')}</td>
-          <td class="who">${esc(i.n||'—')}</td>
-          <td>${i.d||i.h ? esc([i.d,i.h].filter(Boolean).join(' ')) : '—'}</td></tr>`).join('');
-      body.innerHTML = `<div class="stale-chips">${chips}</div>
+      return;
+    }
+    const top = colabs[0], topSetor = setores[0];
+    const max = top.qtd;
+    const rows = colabs.map((c,i)=>{
+      const share = c.qtd/total;
+      const ctx = c.itens ? `<b>${nf(c.qtd)}</b> de ${nf(c.itens)} bipes (${pf(c.qtd/c.itens,1)} do que ele leu)` : `${pf(share,0)} do total de desatualizadas`;
+      return `<div class="sd-row" style="animation-delay:${Math.min(i,12)*.04+.1}s">
+        <div class="sd-pos ${i<3?'p'+(i+1):''}">${i+1}º</div>
+        <div class="sd-av">${esc(initials(c.nome))}</div>
+        <div class="sd-info">
+          <div class="sd-name"><span>${esc(c.nome)}</span>${c.matricula?`<span class="sd-mat">${esc(c.matricula)}</span>`:''}</div>
+          <div class="sd-bar"><i style="width:${Math.max(4,c.qtd/max*100).toFixed(1)}%"></i></div>
+          <div class="sd-ctx">${ctx}</div>
+        </div>
+        <div class="sd-num"><strong>${nf(c.qtd)}</strong><small>${pf(share,0)} do total</small></div>
+      </div>`;
+    }).join('');
+    const tableRows = list.map(i=>`<tr>
+        <td>${esc(i.c)}</td><td>${esc(i.p)}</td><td>${esc(i.s)}</td><td>${esc(i.l||'—')}</td>
+        <td class="who">${esc(i.n ? parseColabName(i.n).nome : '—')}</td><td>${esc(dh(i))}</td></tr>`).join('');
+
+    body.innerHTML = `
+      <div class="sd-top">
+        <div class="sd-lead">Ranking de quem mais bipou etiquetas desatualizadas e o detalhamento de cada item. Copie tudo como imagem para enviar à equipe.</div>
+        <button class="sd-copy" id="sdCopy" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="9" cy="9" r="1.8"/><path d="M21 15l-5-5-9 9"/></svg>
+          <span id="sdCopyLabel">Copiar imagem</span>
+        </button>
+      </div>
+
+      <div class="sd-kpis">
+        <div class="sd-kpi"><div class="sd-kpi-label">Desatualizadas</div><div class="sd-kpi-value">${nf(total)}</div><div class="sd-kpi-meta">precisam de reimpressão</div></div>
+        <div class="sd-kpi alt"><div class="sd-kpi-label">Colaboradores</div><div class="sd-kpi-value">${nf(colabs.length)}</div><div class="sd-kpi-meta">bipando desatualizadas</div></div>
+        <div class="sd-kpi cy"><div class="sd-kpi-label">Mais leituras</div><div class="sd-kpi-value txt" title="${esc(top.nome)}">${esc(top.nome)}</div><div class="sd-kpi-meta"><b>${nf(top.qtd)}</b> etiquetas · ${pf(top.qtd/total,0)} do total</div></div>
+        <div class="sd-kpi"><div class="sd-kpi-label">Setor mais afetado</div><div class="sd-kpi-value txt" title="${esc(topSetor[0])}">${esc(topSetor[0])}</div><div class="sd-kpi-meta"><b>${nf(topSetor[1])}</b> etiquetas · ${pf(topSetor[1]/total,0)} do total</div></div>
+      </div>
+
+      <div class="sd-opts ${prefs.on?'on':''}" id="sdOpts">
+        <div class="sd-opts-head">
+          <div class="sd-opts-ico">🧾</div>
+          <div class="sd-opts-main">
+            <div class="sd-opts-title">Incluir detalhes das etiquetas no print</div>
+            <div class="sd-opts-sub">${prefs.on ? 'A imagem copiada trará o ranking e a tabela com os campos escolhidos.' : 'Desligado: a imagem copiada traz só o dashboard e o ranking de colaboradores.'}</div>
+          </div>
+          <button class="sd-switch" id="sdSwitch" type="button" role="switch" aria-checked="${prefs.on}" aria-label="Incluir detalhes das etiquetas no print"></button>
+        </div>
+        <div class="sd-cols" id="sdCols">
+          ${COLS.map(c=>`<button class="sd-chip" type="button" data-col="${c.k}" aria-pressed="${prefs.cols[c.k]}"><span class="ck">✓</span>${c.label}</button>`).join('')}
+        </div>
+        <div class="sd-opts-note">Escolha quais colunas aparecem na imagem. No print, a tabela mostra até 25 etiquetas.</div>
+      </div>
+
+      <div class="sd-panel">
+        <div class="sd-panel-head">
+          <div><div class="sd-panel-title">Quem mais leu etiquetas desatualizadas</div><div class="sd-panel-sub">Ranking por quantidade de etiquetas desatualizadas bipadas</div></div>
+          <div class="sd-tag">${nf(colabs.length)} ${colabs.length===1?'colaborador':'colaboradores'}</div>
+        </div>
+        <div class="sd-rank">${rows}</div>
+      </div>
+
+      <details class="sd-panel sd-det">
+        <summary>
+          <div><div class="sd-panel-title">Detalhamento das etiquetas</div><div class="sd-panel-sub">${nf(total)} ${total===1?'item':'itens'} · toque para abrir</div></div>
+          <svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+        </summary>
         <div class="stale-table-wrap"><table class="stale-table">
           <thead><tr><th>Código</th><th>Produto</th><th>Setor</th><th>Corredor</th><th>Quem bipou</th><th>Data / hora</th></tr></thead>
-          <tbody>${rows}</tbody></table></div>`;
-    }
-    backdrop.classList.add('show');
+          <tbody>${tableRows}</tbody></table></div>
+      </details>`;
+
+    /* interações das opções */
+    const opts = body.querySelector('#sdOpts');
+    const sw = body.querySelector('#sdSwitch');
+    sw.addEventListener('click', ()=>{
+      prefs.on = !prefs.on; savePrefs();
+      sw.setAttribute('aria-checked', String(prefs.on));
+      opts.classList.toggle('on', prefs.on);
+      opts.querySelector('.sd-opts-sub').textContent = prefs.on
+        ? 'A imagem copiada trará o ranking e a tabela com os campos escolhidos.'
+        : 'Desligado: a imagem copiada traz só o dashboard e o ranking de colaboradores.';
+    });
+    body.querySelectorAll('.sd-chip').forEach(ch=>{
+      ch.addEventListener('click', ()=>{
+        const k = ch.dataset.col;
+        const active = COLS.filter(c=>prefs.cols[c.k]).length;
+        if(prefs.cols[k] && active<=1){ showToast('Deixe ao menos uma coluna marcada.'); return; }
+        prefs.cols[k] = !prefs.cols[k]; savePrefs();
+        ch.setAttribute('aria-pressed', String(prefs.cols[k]));
+      });
+    });
+    body.querySelector('#sdCopy').addEventListener('click', copyImage);
   }
+
+  /* ---------- imagem (SVG → PNG) ---------- */
+  const F_UI = "'Inter','Segoe UI',system-ui,sans-serif";
+  const F_DISP = "'Bricolage Grotesque','Inter','Segoe UI',sans-serif";
+  const fitText = (text, maxW, size, weight) => {
+    _measureCtx.font = `${weight} ${size}px ${F_UI}`;
+    let t = String(text==null?'':text);
+    if(_measureCtx.measureText(t).width <= maxW) return t;
+    while(t.length>1 && _measureCtx.measureText(t+'…').width > maxW) t = t.slice(0,-1);
+    return t.trimEnd()+'…';
+  };
+  const T = (x,y,txt,o) => {
+    o = o||{};
+    return `<text x="${x}" y="${y}" text-anchor="${o.a||'start'}" font-family="${o.f||F_UI}" font-size="${o.s||12}" font-weight="${o.w||500}" fill="${o.c||'#a9b8cf'}" letter-spacing="${o.ls||0}"${o.op?` fill-opacity="${o.op}"`:''}>${xmlEsc(txt)}</text>`;
+  };
+
+  function buildSvg(){
+    const { d, list, colabs, setores, total } = aggregate();
+    const W = 1000, PAD = 36, IW = W - PAD*2;
+    const withDetail = prefs.on;
+    const cols = COLS.filter(c=>prefs.cols[c.k]);
+    const MAXR = 10, MAXT = 25;
+    const shownColabs = colabs.slice(0, MAXR);
+    const extraColabs = colabs.length - shownColabs.length;
+    const shownList = list.slice(0, MAXT);
+    const extraList = list.length - shownList.length;
+    const top = colabs[0], topSetor = setores[0];
+    const max = top.qtd;
+    let y = 0, out = '';
+    out += `<defs>
+      <linearGradient id="sdAm" x1="0" x2="1"><stop offset="0" stop-color="#f59e0b"/><stop offset="1" stop-color="#fbbf24"/></linearGradient>
+      <linearGradient id="sdCy" x1="0" x2="1"><stop offset="0" stop-color="#4cc9f0"/><stop offset="1" stop-color="#8b7cf6"/></linearGradient>
+    </defs>`;
+
+    /* cabeçalho */
+    y = 40;
+    out += T(PAD, y, 'AUDITORIA DE ETIQUETA', {s:11, w:700, c:'#fbbf24', ls:1.6});
+    y += 34;
+    out += T(PAD, y, 'Etiquetas desatualizadas', {s:28, w:700, c:'#f5f8fc', f:F_DISP});
+    const upd = d.ultimaAtualizacao ? 'Atualizado em ' + d.ultimaAtualizacao : '';
+    if(upd) out += T(W-PAD, y-4, upd, {s:12, w:600, a:'end'});
+    y += 14;
+    out += `<rect x="${PAD}" y="${y}" width="64" height="3" rx="1.5" fill="url(#sdAm)"/>`;
+    y += 28;
+
+    /* KPIs */
+    const kw = (IW - 3*14)/4, kh = 92;
+    const kpis = [
+      {l:'DESATUALIZADAS', v:nf(total), big:true, m:'precisam de reimpressão', c:'#fbbf24'},
+      {l:'COLABORADORES', v:nf(colabs.length), big:true, m:'bipando desatualizadas', c:'#8b7cf6'},
+      {l:'MAIS LEITURAS', v:top.nome, m:`${nf(top.qtd)} etiquetas · ${pf(top.qtd/total,0)} do total`, c:'#4cc9f0'},
+      {l:'SETOR MAIS AFETADO', v:topSetor[0], m:`${nf(topSetor[1])} etiquetas · ${pf(topSetor[1]/total,0)} do total`, c:'#fbbf24'},
+    ];
+    kpis.forEach((k,i)=>{
+      const x = PAD + i*(kw+14);
+      out += roundedRect(x,y,kw,kh,16,'rgba(255,255,255,.05)',{stroke:'rgba(255,255,255,.08)'});
+      out += `<rect x="${x}" y="${y+18}" width="3" height="${kh-36}" rx="1.5" fill="${k.c}"/>`;
+      out += T(x+18, y+26, k.l, {s:10, w:700, ls:1.2, op:.8});
+      if(k.big) out += T(x+18, y+64, k.v, {s:32, w:700, c:k.c, f:F_DISP});
+      else out += T(x+18, y+60, fitText(k.v, kw-34, 16, 700), {s:16, w:700, c:'#f5f8fc'});
+      out += T(x+18, y+kh-12, fitText(k.m, kw-34, 11, 500), {s:11, w:500});
+    });
+    y += kh + 22;
+
+    /* ranking */
+    const rowH = 60;
+    const rankH = 74 + shownColabs.length*rowH + (extraColabs>0?26:0) + 10;
+    out += roundedRect(PAD,y,IW,rankH,20,'rgba(255,255,255,.04)',{stroke:'rgba(255,255,255,.08)'});
+    out += T(PAD+22, y+34, 'Quem mais leu etiquetas desatualizadas', {s:17, w:700, c:'#f5f8fc', f:F_DISP});
+    out += T(PAD+22, y+54, 'Ranking por quantidade de etiquetas desatualizadas bipadas', {s:11.5, w:500});
+    const tag = `${nf(colabs.length)} ${colabs.length===1?'colaborador':'colaboradores'}`;
+    _measureCtx.font = `700 11px ${F_UI}`;
+    const tw = _measureCtx.measureText(tag).width + 24;
+    out += roundedRect(PAD+IW-22-tw, y+20, tw, 26, 13, 'rgba(251,191,36,.12)', {stroke:'rgba(251,191,36,.3)'});
+    out += T(PAD+IW-22-tw/2, y+37, tag, {s:11, w:700, c:'#fbbf24', a:'middle'});
+    let ry = y + 70;
+    shownColabs.forEach((c,i)=>{
+      const share = c.qtd/total;
+      if(i>0) out += `<line x1="${PAD+22}" x2="${PAD+IW-22}" y1="${ry}" y2="${ry}" stroke="rgba(255,255,255,.07)"/>`;
+      const cy = ry + rowH/2;
+      /* posição */
+      const medal = [['#fbbf24','#2a1a02'],['#c9d6ea','#142033'],['#e0955a','#2a1405']][i];
+      out += roundedRect(PAD+22, cy-14, 28, 28, 9, medal?medal[0]:'rgba(255,255,255,.07)');
+      out += T(PAD+36, cy+4.5, `${i+1}º`, {s:12, w:800, a:'middle', c: medal?medal[1]:'#a9b8cf'});
+      /* nome e barra */
+      const nx = PAD+66, numW = 92, barW = IW - 22 - 66 - numW - 22;
+      out += T(nx, cy-8, fitText(c.nome, barW-90, 13.5, 700), {s:13.5, w:700, c:'#f5f8fc'});
+      if(c.matricula){
+        _measureCtx.font = `700 13.5px ${F_UI}`;
+        const nw = Math.min(_measureCtx.measureText(c.nome).width, barW-90);
+        out += T(nx+nw+8, cy-8, c.matricula, {s:11, w:500, op:.7});
+      }
+      out += roundedRect(nx, cy+1, barW, 8, 4, 'rgba(255,255,255,.08)');
+      out += roundedRect(nx, cy+1, Math.max(8, barW*c.qtd/max), 8, 4, 'url(#sdAm)');
+      const ctx = c.itens ? `${nf(c.qtd)} de ${nf(c.itens)} bipes (${pf(c.qtd/c.itens,1)} do que leu)` : `${pf(share,0)} do total`;
+      out += T(nx, cy+23, fitText(ctx, barW, 10.5, 500), {s:10.5, w:500, op:.8});
+      /* número */
+      out += T(PAD+IW-22, cy+2, nf(c.qtd), {s:24, w:700, c:'#fbbf24', a:'end', f:F_DISP});
+      out += T(PAD+IW-22, cy+19, `${pf(share,0)} do total`, {s:10.5, w:600, a:'end', op:.8});
+      ry += rowH;
+    });
+    if(extraColabs>0) out += T(PAD+IW/2, ry+18, `+ ${nf(extraColabs)} ${extraColabs===1?'colaborador':'colaboradores'} não exibido${extraColabs===1?'':'s'}`, {s:11, w:600, a:'middle', op:.8});
+    y += rankH + 18;
+
+    /* detalhamento (opcional) */
+    if(withDetail){
+      const th = 34, trh = 32;
+      const tableH = 70 + th + shownList.length*trh + (extraList>0?30:0) + 10;
+      out += roundedRect(PAD,y,IW,tableH,20,'rgba(255,255,255,.04)',{stroke:'rgba(255,255,255,.08)'});
+      out += T(PAD+22, y+34, 'Detalhamento das etiquetas', {s:17, w:700, c:'#f5f8fc', f:F_DISP});
+      out += T(PAD+22, y+54, `${nf(shownList.length)} de ${nf(list.length)} ${list.length===1?'item':'itens'} · ${cols.map(c=>c.label).join(', ')}`, {s:11.5, w:500});
+      const tx = PAD+22, tW = IW-44, wSum = cols.reduce((a,c)=>a+c.w,0);
+      let cx = tx; const pos = {};
+      cols.forEach(c=>{ const w = tW*c.w/wSum; pos[c.k] = {x:cx, w}; cx += w; });
+      let ty = y + 70;
+      out += roundedRect(tx-8, ty, tW+16, th, 10, 'rgba(251,191,36,.10)');
+      cols.forEach(c=> out += T(pos[c.k].x+4, ty+21, c.label.toUpperCase(), {s:10, w:700, c:'#fbbf24', ls:1}));
+      ty += th;
+      shownList.forEach((i,idx)=>{
+        if(idx%2===1) out += roundedRect(tx-8, ty, tW+16, trh, 8, 'rgba(255,255,255,.035)');
+        const vals = { dh:dh(i), setor:i.s||'—', corr:i.l||'—', cod:i.c||'—', prod:i.p||'—', colab:i.n?parseColabName(i.n).nome:'—' };
+        cols.forEach(c=>{
+          const strong = c.k==='colab' || c.k==='cod';
+          out += T(pos[c.k].x+4, ty+21, fitText(vals[c.k], pos[c.k].w-12, 11.5, strong?600:500), {s:11.5, w:strong?600:500, c: strong?'#f5f8fc':'#a9b8cf'});
+        });
+        ty += trh;
+      });
+      if(extraList>0) out += T(PAD+IW/2, ty+22, `+ ${nf(extraList)} ${extraList===1?'etiqueta':'etiquetas'} não exibida${extraList===1?'':'s'} neste print`, {s:11, w:600, a:'middle', op:.8});
+      y += tableH + 18;
+    }
+
+    /* rodapé */
+    const now = new Date();
+    const stamp = now.toLocaleDateString('pt-BR') + ' ' + now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+    out += `<line x1="${PAD}" x2="${W-PAD}" y1="${y}" y2="${y}" stroke="rgba(255,255,255,.08)"/>`;
+    out += T(PAD, y+26, 'NEXUS INSIGHT', {s:11, w:800, c:'#4cc9f0', ls:1.8});
+    out += T(W-PAD, y+26, 'Gerado em ' + stamp, {s:11, w:500, a:'end'});
+    const H = y + 48;
+    return { w:W, h:H, svg:out };
+  }
+
+  async function copyImage(){
+    const btn = document.getElementById('sdCopy');
+    const lbl = document.getElementById('sdCopyLabel');
+    btn.disabled = true; lbl.textContent = 'Gerando…';
+    let blobP;
+    try{
+      const { w, h, svg } = buildSvg();
+      blobP = rasterize(w, h, svg, 2);
+      await blobP;
+    }catch(err){
+      btn.disabled = false; lbl.textContent = 'Copiar imagem';
+      showToast('Não foi possível gerar a imagem.');
+      return;
+    }
+    const blob = await blobP;
+    try{
+      if(!navigator.clipboard || !window.ClipboardItem) throw new Error('sem clipboard API');
+      await navigator.clipboard.write([ new ClipboardItem({ 'image/png': blob }) ]);
+      showToast('Imagem copiada para a área de transferência.');
+      btn.classList.add('copied'); lbl.textContent = 'Copiado!';
+      setTimeout(()=>{ btn.classList.remove('copied'); lbl.textContent = 'Copiar imagem'; }, 1600);
+    }catch(err){
+      const link = document.createElement('a');
+      link.download = 'etiquetas-desatualizadas.png';
+      link.href = URL.createObjectURL(blob);
+      link.click();
+      setTimeout(()=> URL.revokeObjectURL(link.href), 4000);
+      showToast('Não foi possível copiar — a imagem foi baixada.');
+      lbl.textContent = 'Copiar imagem';
+    } finally {
+      btn.disabled = false;
+    }
+  }
+
+  function open(){ render(); backdrop.classList.add('show'); }
   function close(){ backdrop.classList.remove('show'); }
 
   banner.addEventListener('dblclick', open);
